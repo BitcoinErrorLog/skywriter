@@ -3,6 +3,7 @@ package com.bitcoinerrorlog.skywriter.ui.list
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,10 @@ class CharacterListFragment : Fragment() {
     private lateinit var adapter: CharacterAdapter
     private var isSearchVisible = false
     
+    companion object {
+        private const val TAG = "CharacterListFragment"
+    }
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +40,8 @@ class CharacterListFragment : Fragment() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        Log.d(TAG, "Fragment view created")
         
         setupToolbar()
         setupRecyclerView()
@@ -109,11 +116,23 @@ class CharacterListFragment : Fragment() {
     private fun observeViewModel() {
         // Observe characters by game for organized display
         viewModel.charactersByGame.observe(viewLifecycleOwner) { charactersByGame ->
+            Log.d(TAG, "charactersByGame updated: ${charactersByGame.size} games")
             if (charactersByGame.isNotEmpty()) {
                 adapter.submitList(charactersByGame)
                 binding.emptyStateText.visibility = View.GONE
+                binding.charactersRecyclerView.visibility = View.VISIBLE
+                
+                // Log for debugging
+                charactersByGame.forEach { (game, chars) ->
+                    Log.d(TAG, "Game: $game - ${chars.size} characters")
+                    chars.take(5).forEach { char ->
+                        Log.d(TAG, "  - ${char.metadata.displayName} (${char.metadata.subcategory})")
+                    }
+                }
             } else {
                 binding.emptyStateText.visibility = View.VISIBLE
+                binding.charactersRecyclerView.visibility = View.GONE
+                adapter.submitList(emptyMap())
             }
         }
         
@@ -122,13 +141,16 @@ class CharacterListFragment : Fragment() {
             if (binding.searchCard.visibility == View.VISIBLE && 
                 binding.searchEditText.text?.isNotBlank() == true) {
                 // In search mode, show flat list
+                Log.d(TAG, "Search results: ${characters.size} characters")
                 if (characters.isNotEmpty()) {
                     val searchResults = mapOf("Search Results" to characters)
                     adapter.submitList(searchResults)
                     binding.emptyStateText.visibility = View.GONE
+                    binding.charactersRecyclerView.visibility = View.VISIBLE
                 } else {
                     adapter.submitList(emptyMap())
                     binding.emptyStateText.visibility = View.VISIBLE
+                    binding.charactersRecyclerView.visibility = View.GONE
                 }
             }
         }
@@ -139,9 +161,18 @@ class CharacterListFragment : Fragment() {
                 binding.emptyStateText.visibility = View.GONE
             }
         }
+        
+        viewModel.errorMessage.observe(viewLifecycleOwner) { error ->
+            if (error != null) {
+                Log.e(TAG, "Error: $error")
+                binding.emptyStateText.text = error
+                binding.emptyStateText.visibility = View.VISIBLE
+            }
+        }
     }
     
     private fun showCharacterDetail(character: CharacterModel) {
+        Log.d(TAG, "Showing character: ${character.metadata.displayName}")
         val dialog = CharacterDetailDialog().apply {
             arguments = Bundle().apply {
                 putParcelable("character", character)

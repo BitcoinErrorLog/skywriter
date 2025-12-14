@@ -1,6 +1,7 @@
 package com.bitcoinerrorlog.skywriter.data
 
 import android.content.Context
+import android.util.Log
 import org.json.JSONObject
 import java.io.InputStream
 
@@ -9,40 +10,58 @@ class NFCDatabase(private val context: Context) {
     private val charactersCache = mutableListOf<CharacterModel>()
     private var isLoaded = false
     
+    companion object {
+        private const val TAG = "NFCDatabase"
+        private const val ASSETS_PATH = "Android_NFC_Data"
+    }
+    
     suspend fun loadCharacters(): List<CharacterModel> {
         if (isLoaded) {
+            Log.d(TAG, "Returning cached characters: ${charactersCache.size}")
             return charactersCache
         }
         
         val characters = mutableListOf<CharacterModel>()
         
         try {
-            val assetsPath = "Android_NFC_Data"
-            val files = context.assets.list(assetsPath) ?: emptyArray()
+            Log.d(TAG, "Loading characters from assets: $ASSETS_PATH")
+            val files = context.assets.list(ASSETS_PATH)
+            
+            if (files == null || files.isEmpty()) {
+                Log.w(TAG, "No files found in assets/$ASSETS_PATH - assets folder may be empty")
+                // Return empty list but don't mark as loaded so it can retry
+                return emptyList()
+            }
+            
+            Log.d(TAG, "Found ${files.size} items in assets directory")
             
             files.forEach { file ->
                 if (file.endsWith(".json")) {
                     try {
-                        val inputStream = context.assets.open("$assetsPath/$file")
-                        val character = parseCharacterJSON(inputStream, file, assetsPath)
+                        val inputStream = context.assets.open("$ASSETS_PATH/$file")
+                        val character = parseCharacterJSON(inputStream, file, ASSETS_PATH)
                         if (character != null) {
                             characters.add(character)
                         }
                     } catch (e: Exception) {
-                        // Skip files that can't be parsed
-                        e.printStackTrace()
+                        Log.e(TAG, "Error loading file $file", e)
                     }
                 } else {
                     // Handle subdirectories recursively
-                    loadCharactersFromDirectory("$assetsPath/$file", characters)
+                    loadCharactersFromDirectory("$ASSETS_PATH/$file", characters)
                 }
             }
             
             charactersCache.clear()
             charactersCache.addAll(characters)
             isLoaded = true
+            
+            Log.d(TAG, "Successfully loaded ${characters.size} characters")
+            Log.d(TAG, "Games found: ${getCharactersByGame().keys}")
+            
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error loading characters", e)
+            isLoaded = false
         }
         
         return charactersCache
@@ -51,6 +70,8 @@ class NFCDatabase(private val context: Context) {
     private fun loadCharactersFromDirectory(directory: String, characters: MutableList<CharacterModel>) {
         try {
             val files = context.assets.list(directory) ?: emptyArray()
+            Log.d(TAG, "Loading from directory: $directory (${files.size} items)")
+            
             files.forEach { file ->
                 if (file.endsWith(".json")) {
                     try {
@@ -60,7 +81,7 @@ class NFCDatabase(private val context: Context) {
                             characters.add(character)
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        Log.e(TAG, "Error loading file $directory/$file", e)
                     }
                 } else {
                     // Recursively load from subdirectories
@@ -68,7 +89,7 @@ class NFCDatabase(private val context: Context) {
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error loading directory: $directory", e)
         }
     }
     
@@ -98,7 +119,7 @@ class NFCDatabase(private val context: Context) {
                 metadata = metadata
             )
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e(TAG, "Error parsing JSON file: $filename", e)
             null
         }
     }
@@ -112,19 +133,27 @@ class NFCDatabase(private val context: Context) {
     }
     
     fun getCharactersByGame(): Map<String, List<CharacterModel>> {
-        return charactersCache.groupBy { it.metadata.gameSeries }
+        val grouped = charactersCache.groupBy { it.metadata.gameSeries }
+        Log.d(TAG, "Characters by game: ${grouped.map { "${it.key}: ${it.value.size}" }}")
+        return grouped
     }
     
     fun searchCharacters(query: String): List<CharacterModel> {
         val lowerQuery = query.lowercase()
-        return charactersCache.filter {
+        val results = charactersCache.filter {
             it.metadata.displayName.lowercase().contains(lowerQuery) ||
-            it.metadata.gameSeries.lowercase().contains(lowerQuery)
+            it.metadata.gameSeries.lowercase().contains(lowerQuery) ||
+            it.metadata.subcategory?.lowercase()?.contains(lowerQuery) == true
         }
+        Log.d(TAG, "Search '$query' returned ${results.size} results")
+        return results
     }
     
     fun getCharacterByUid(uid: String): CharacterModel? {
         return charactersCache.find { it.uid.equals(uid, ignoreCase = true) }
     }
+    
+    fun getTotalCount(): Int = charactersCache.size
+    
+    fun getGameCount(): Int = getCharactersByGame().size
 }
-

@@ -1,6 +1,7 @@
 package com.bitcoinerrorlog.skywriter.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,19 +26,40 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
     
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
+    
+    companion object {
+        private const val TAG = "CharacterViewModel"
+    }
+    
     init {
+        Log.d(TAG, "ViewModel initialized, loading characters...")
         loadCharacters()
     }
     
     fun loadCharacters() {
         viewModelScope.launch {
             _isLoading.value = true
+            _errorMessage.value = null
             try {
+                Log.d(TAG, "Loading all characters...")
                 val allCharacters = repository.getAllCharacters()
+                Log.d(TAG, "Loaded ${allCharacters.size} characters")
+                
                 _characters.value = allCharacters
-                _charactersByGame.value = repository.getCharactersByGame()
+                
+                val byGame = repository.getCharactersByGame()
+                Log.d(TAG, "Organized into ${byGame.size} games")
+                _charactersByGame.value = byGame
+                
+                if (allCharacters.isEmpty()) {
+                    _errorMessage.value = "No characters found. Please add JSON files to assets/Android_NFC_Data/"
+                    Log.w(TAG, "No characters loaded - assets folder may be empty")
+                }
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "Error loading characters", e)
+                _errorMessage.value = "Error loading characters: ${e.message}"
             } finally {
                 _isLoading.value = false
             }
@@ -53,8 +75,10 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
                 try {
                     val results = repository.searchCharacters(query)
                     _characters.value = results
+                    Log.d(TAG, "Search '$query' returned ${results.size} results")
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.e(TAG, "Error searching characters", e)
+                    _errorMessage.value = "Error searching: ${e.message}"
                 } finally {
                     _isLoading.value = false
                 }
@@ -70,4 +94,3 @@ class CharacterViewModel(application: Application) : AndroidViewModel(applicatio
         _selectedCharacter.value = null
     }
 }
-

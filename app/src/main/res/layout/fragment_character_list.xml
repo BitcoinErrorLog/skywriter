@@ -27,8 +27,7 @@
                 android:scaleType="fitCenter"
                 android:contentDescription="@string/app_name"
                 android:src="@drawable/header_logo"
-                android:visibility="gone"
-                tools:visibility="visible" />
+                android:visibility="visible" />
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"

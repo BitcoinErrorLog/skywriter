@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <group>
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M54,27C40.2,27 29,38.2 29,52C29,65.8 40.2,77 54,77C67.8,77 79,65.8 79,52C79,38.2 67.8,27 54,27Z" />
-    </group>
+    android:width="432dp"
+    android:height="432dp"
+    android:viewportWidth="432"
+    android:viewportHeight="432">
+    
+    <!-- Background circle (will be behind the S) -->
+    <path
+        android:fillColor="#FCD34D"
+        android:pathData="M216,216m-180,0a180,180 0,1 1,360 0a180,180 0,1 1,-360 0" />
+    
+    <!-- Letter S -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="8"
+        android:pathData="M216,80 Q180,80 160,100 Q140,120 140,150 Q140,170 155,185 Q170,200 200,210 Q230,220 250,230 Q270,240 280,260 Q290,280 290,300 Q290,330 270,350 Q250,370 220,370 Q190,370 170,350" />
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="8"
+        android:pathData="M170,350 Q150,330 150,300 Q150,280 160,260 Q170,240 190,230 Q210,220 240,210 Q270,200 285,185 Q300,170 300,150 Q300,120 280,100 Q260,80 230,80 Q200,80 180,100" />
+    
+    <!-- Left Wing -->
+    <path
+        android:fillColor="#E5E7EB"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="4"
+        android:pathData="M80,150 Q60,120 50,100 Q40,80 35,60 Q30,40 30,30 L50,40 Q55,55 60,70 Q65,85 75,100 Q85,115 100,130 Q115,145 130,160 Q145,175 160,190 Q140,180 120,170 Q100,160 80,150 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="3"
+        android:pathData="M100,130 Q85,115 75,100 Q65,85 60,70 Q55,55 50,40 L65,50 Q70,65 80,80 Q90,95 105,110 Q120,125 135,140 Q120,135 110,130 Q100,125 100,130 Z" />
+    
+    <!-- Right Wing -->
+    <path
+        android:fillColor="#E5E7EB"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="4"
+        android:pathData="M352,150 Q372,120 382,100 Q392,80 397,60 Q402,40 402,30 L382,40 Q377,55 372,70 Q367,85 357,100 Q347,115 332,130 Q317,145 302,160 Q287,175 272,190 Q292,180 312,170 Q332,160 352,150 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="3"
+        android:pathData="M332,130 Q347,115 357,100 Q367,85 372,70 Q377,55 382,40 L367,50 Q362,65 352,80 Q342,95 327,110 Q312,125 297,140 Q312,135 322,130 Q332,125 332,130 Z" />
+    
 </vector>
-

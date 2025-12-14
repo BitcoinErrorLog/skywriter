@@ -1,7 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Placeholder for header logo. Replace with actual PNG image when available. -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@android:color/transparent" />
-</shape>
-
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="120dp"
+    android:viewportWidth="400"
+    android:viewportHeight="120">
+    
+    <!-- Banner Background -->
+    <path
+        android:fillColor="#1E3A8A"
+        android:pathData="M20,20 L380,20 Q390,20 390,30 L390,90 Q390,100 380,100 L20,100 Q10,100 10,90 L10,30 Q10,20 20,20 Z" />
+    
+    <!-- Banner White Outline -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="3"
+        android:pathData="M20,20 L380,20 Q390,20 390,30 L390,90 Q390,100 380,100 L20,100 Q10,100 10,90 L10,30 Q10,20 20,20 Z" />
+    
+    <!-- Banner Dark Blue Outline -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="1"
+        android:pathData="M20,20 L380,20 Q390,20 390,30 L390,90 Q390,100 380,100 L20,100 Q10,100 10,90 L10,30 Q10,20 20,20 Z" />
+    
+    <!-- Simplified SKYWRITER text representation using shapes -->
+    <!-- Letter S -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M120,50 Q100,50 90,60 Q80,70 80,80 Q80,85 85,88 Q90,91 100,93 Q110,95 120,97 Q130,99 135,102 Q140,105 140,110 Q140,115 135,118 Q130,121 120,121 Q110,121 105,118" />
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M105,118 Q100,115 100,110 Q100,105 105,102 Q110,99 120,97 Q130,95 140,93 Q150,91 155,88 Q160,85 160,80 Q160,70 150,60 Q140,50 120,50" />
+    
+    <!-- Letter K (simplified) -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M170,50 L170,121 M170,85 L200,50 M170,85 L200,121" />
+    
+    <!-- Letter Y (simplified) -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M220,50 L235,80 L250,50 M235,80 L235,121" />
+    
+    <!-- Letter W (simplified) -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M260,50 L270,100 L280,50 L290,100 L300,50" />
+    
+    <!-- Letter R (simplified) -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M310,50 L310,121 M310,50 L330,50 Q340,50 340,60 Q340,70 330,70 L310,70 M310,70 L330,121" />
+    
+    <!-- Letter I -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M350,50 L350,121" />
+    
+    <!-- Letter T -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M360,50 L380,50 M370,50 L370,121" />
+    
+    <!-- Letter E -->
+    <path
+        android:fillColor="#FCD34D"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M390,50 L390,121 M390,50 L410,50 M390,85 L410,85 M390,121 L410,121" />
+    
+    <!-- Left Wing -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M0,40 Q-10,20 -15,10 Q-20,0 -20,-5 L-5,0 Q-3,5 0,15 Q3,25 8,35 Q13,45 20,55 Q15,50 10,45 Q5,40 0,40 Z" />
+    <path
+        android:fillColor="#E5E7EB"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M8,35 Q3,25 0,15 Q-3,5 -5,0 L-2,5 Q0,12 3,20 Q6,28 10,35 Q8,35 8,35 Z" />
+    
+    <!-- Right Wing -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M400,40 Q410,20 415,10 Q420,0 420,-5 L405,0 Q403,5 400,15 Q397,25 392,35 Q387,45 380,55 Q385,50 390,45 Q395,40 400,40 Z" />
+    <path
+        android:fillColor="#E5E7EB"
+        android:strokeColor="#1E40AF"
+        android:strokeWidth="2"
+        android:pathData="M392,35 Q397,25 400,15 Q403,5 405,0 L402,5 Q400,12 397,20 Q394,28 390,35 Q392,35 392,35 Z" />
+    
+</vector>

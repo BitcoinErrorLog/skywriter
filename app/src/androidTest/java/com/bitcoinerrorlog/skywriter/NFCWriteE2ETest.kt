@@ -92,7 +92,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test NFC manager initialization`() {
+    fun testNFCManagerInitialization() {
         // Note: This will fail if NFC is not available on the test device
         // In CI/CD, we can mock this
         val activity = InstrumentationRegistry.getInstrumentation().targetContext as? android.app.Activity
@@ -105,7 +105,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test character data structure validity`() {
+    fun testCharacterDataStructureValidity() {
         // Verify test character has correct structure
         assertEquals("21B589A3", testCharacter.uid)
         assertEquals("0004", testCharacter.atqa)
@@ -119,7 +119,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test block data format`() {
+    fun testBlockDataFormat() {
         // Each block should be 32 hex characters (16 bytes)
         testCharacter.blocks.forEach { block ->
             assertEquals("Block should be 32 hex characters", 32, block.length)
@@ -129,7 +129,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test WriteResult types for error handling`() {
+    fun testWriteResultTypesForErrorHandling() {
         // Test all WriteResult types
         val results = listOf(
             WriteResult.Success,
@@ -146,7 +146,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test character metadata parsing`() {
+    fun testCharacterMetadataParsing() {
         assertEquals("TestCharacter", testCharacter.metadata.displayName)
         assertEquals("Test Game", testCharacter.metadata.gameSeries)
         assertEquals("test/TestCharacter.nfc", testCharacter.metadata.originalPath)
@@ -169,7 +169,7 @@ class NFCWriteE2ETest {
      * - Proper permissions
      */
     @Test
-    fun `test simulated E2E write flow`() {
+    fun testSimulatedE2EWriteFlow() {
         // Step 1: Verify character is ready
         assertNotNull("Character should not be null", testCharacter)
         assertEquals("Character should have 64 blocks", 64, testCharacter.blocks.size)
@@ -193,7 +193,7 @@ class NFCWriteE2ETest {
     }
     
     @Test
-    fun `test NFC adapter availability check`() {
+    fun testNFCAdapterAvailabilityCheck() {
         val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
         
         // In emulator or devices without NFC, this will be null

@@ -15,7 +15,7 @@ import org.junit.Assert.*
 class MifareClassicWriterInstrumentedTest {
     
     @Test
-    fun `test WriteResult types`() {
+    fun testWriteResultTypes() {
         val success = WriteResult.Success
         val error = WriteResult.Error("Test")
         val nfcNotAvailable = WriteResult.NFCNotAvailable
@@ -32,7 +32,7 @@ class MifareClassicWriterInstrumentedTest {
     }
     
     @Test
-    fun `test MifareClassicWriter initialization`() {
+    fun testMifareClassicWriterInitialization() {
         val writer = MifareClassicWriter()
         assertNotNull("Writer should be initialized", writer)
     }

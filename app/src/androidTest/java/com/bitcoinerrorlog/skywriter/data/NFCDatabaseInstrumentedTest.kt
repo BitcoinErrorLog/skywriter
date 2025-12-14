@@ -26,12 +26,12 @@ class NFCDatabaseInstrumentedTest {
     }
     
     @Test
-    fun `test database initialization`() {
+    fun testDatabaseInitialization() {
         assertNotNull(database)
     }
     
     @Test
-    fun `test loadCharacters returns empty list when no assets`() = runBlocking {
+    fun testLoadCharactersReturnsEmptyListWhenNoAssets() = runBlocking {
         // This will return empty if no JSON files are in assets
         val characters = database.loadCharacters()
         assertNotNull(characters)
@@ -39,14 +39,14 @@ class NFCDatabaseInstrumentedTest {
     }
     
     @Test
-    fun `test getCharactersByGame returns empty map when no characters`() {
+    fun testGetCharactersByGameReturnsEmptyMapWhenNoCharacters() {
         val byGame = database.getCharactersByGame()
         assertNotNull(byGame)
         assertTrue(byGame.isEmpty())
     }
     
     @Test
-    fun `test searchCharacters returns empty list when no characters`() {
+    fun testSearchCharactersReturnsEmptyListWhenNoCharacters() {
         val results = database.searchCharacters("test")
         assertNotNull(results)
         assertTrue(results.isEmpty())

@@ -25,14 +25,14 @@ class CharacterListUITest {
     }
     
     @Test
-    fun `test repository loads characters`() = runBlocking {
+    fun testRepositoryLoadsCharacters() = runBlocking {
         val characters = repository.getAllCharacters()
         assertNotNull("Characters should not be null", characters)
         // Note: Will be empty if assets folder is empty, but should not crash
     }
     
     @Test
-    fun `test repository organizes by game`() = runBlocking {
+    fun testRepositoryOrganizesByGame() = runBlocking {
         val byGame = repository.getCharactersByGame()
         assertNotNull("Characters by game should not be null", byGame)
         
@@ -46,7 +46,7 @@ class CharacterListUITest {
     }
     
     @Test
-    fun `test repository search works`() = runBlocking {
+    fun testRepositorySearchWorks() = runBlocking {
         val allCharacters = repository.getAllCharacters()
         
         if (allCharacters.isNotEmpty()) {
@@ -61,7 +61,7 @@ class CharacterListUITest {
     }
     
     @Test
-    fun `test all character names are accessible`() = runBlocking {
+    fun testAllCharacterNamesAreAccessible() = runBlocking {
         val characters = repository.getAllCharacters()
         
         characters.forEach { character ->

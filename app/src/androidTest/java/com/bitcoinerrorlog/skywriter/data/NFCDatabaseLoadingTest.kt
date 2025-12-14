@@ -31,19 +31,19 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test database initialization`() {
+    fun testDatabaseInitialization() {
         assertNotNull("Database should be initialized", database)
     }
     
     @Test
-    fun `test loadCharacters returns list`() = runBlocking {
+    fun testLoadCharactersReturnsList() = runBlocking {
         val characters = database.loadCharacters()
         assertNotNull("Characters list should not be null", characters)
         Log.d(TAG, "Loaded ${characters.size} characters")
     }
     
     @Test
-    fun `test getCharactersByGame returns map`() = runBlocking {
+    fun testGetCharactersByGameReturnsMap() = runBlocking {
         database.loadCharacters()
         val byGame = database.getCharactersByGame()
         assertNotNull("Characters by game should not be null", byGame)
@@ -58,7 +58,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test all characters have required fields`() = runBlocking {
+    fun testAllCharactersHaveRequiredFields() = runBlocking {
         val characters = database.loadCharacters()
         
         characters.forEach { character ->
@@ -82,7 +82,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test character names are visible`() = runBlocking {
+    fun testCharacterNamesAreVisible() = runBlocking {
         val characters = database.loadCharacters()
         
         assertTrue("Should have characters to test", characters.isNotEmpty())
@@ -97,7 +97,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test game names are visible`() = runBlocking {
+    fun testGameNamesAreVisible() = runBlocking {
         database.loadCharacters()
         val byGame = database.getCharactersByGame()
         
@@ -110,7 +110,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test search functionality`() = runBlocking {
+    fun testSearchFunctionality() = runBlocking {
         database.loadCharacters()
         val allCharacters = database.loadCharacters()
         
@@ -130,7 +130,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test subcategories are accessible`() = runBlocking {
+    fun testSubcategoriesAreAccessible() = runBlocking {
         val characters = database.loadCharacters()
         
         val withSubcategories = characters.filter { 
@@ -148,7 +148,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test getCharacterByUid`() = runBlocking {
+    fun testGetCharacterByUid() = runBlocking {
         val characters = database.loadCharacters()
         
         if (characters.isNotEmpty()) {
@@ -160,7 +160,7 @@ class NFCDatabaseLoadingTest {
     }
     
     @Test
-    fun `test total count and game count`() = runBlocking {
+    fun testTotalCountAndGameCount() = runBlocking {
         database.loadCharacters()
         val totalCount = database.getTotalCount()
         val gameCount = database.getGameCount()

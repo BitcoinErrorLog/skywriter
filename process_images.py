@@ -47,7 +47,7 @@ def process_app_icon(source_path):
     """Process the app icon for all densities."""
     base_dir = "app/src/main/res"
     
-    # Process foreground (the "S" with wings)
+    # Process foreground (the "S" with wings) as PNG files
     for density, multiplier in DENSITIES.items():
         size = int(ICON_SIZES['launcher_foreground'] * multiplier)
         output_dir = f"{base_dir}/mipmap-{density}"
@@ -59,6 +59,12 @@ def process_app_icon(source_path):
     os.makedirs(f"{base_dir}/mipmap", exist_ok=True)
     resize_image(source_path, f"{base_dir}/mipmap/ic_launcher_foreground.png", 
                  ICON_SIZES['launcher_foreground'])
+    
+    # Remove the XML placeholder since we're using PNG
+    xml_path = f"{base_dir}/mipmap/ic_launcher_foreground.xml"
+    if os.path.exists(xml_path):
+        os.remove(xml_path)
+        print(f"Removed XML placeholder: {xml_path}")
 
 def process_header_logo(source_path):
     """Process the header logo."""
@@ -66,11 +72,28 @@ def process_header_logo(source_path):
     output_dir = f"{base_dir}/drawable"
     os.makedirs(output_dir, exist_ok=True)
     
-    # For header logo, we'll use a reasonable size that maintains aspect ratio
-    # Android will scale it as needed
-    output_path = f"{output_dir}/header_logo.png"
-    resize_image(source_path, output_path, ICON_SIZES['header_logo'])
-    print(f"Header logo created at: {output_path}")
+    # For header logo, maintain aspect ratio but set max width
+    try:
+        img = Image.open(source_path)
+        # Calculate height to maintain aspect ratio with max width
+        max_width = ICON_SIZES['header_logo']
+        aspect_ratio = img.height / img.width
+        new_width = min(img.width, max_width)
+        new_height = int(new_width * aspect_ratio)
+        img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        output_path = f"{output_dir}/header_logo.png"
+        img.save(output_path, 'PNG', optimize=True)
+        print(f"Header logo created at: {output_path} ({img.size[0]}x{img.size[1]})")
+        
+        # Remove the XML placeholder since we're using PNG
+        xml_path = f"{output_dir}/header_logo.xml"
+        if os.path.exists(xml_path):
+            os.remove(xml_path)
+            print(f"Removed XML placeholder: {xml_path}")
+        return True
+    except Exception as e:
+        print(f"Error processing header logo {source_path}: {e}")
+        return False
 
 def main():
     images_dir = "images"

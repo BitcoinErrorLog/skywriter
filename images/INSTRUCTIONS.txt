@@ -1,0 +1,8 @@
+Please place your logo images here:
+
+1. app_icon.png (or .jpg) - The "S" with wings logo for the app icon
+2. header_logo.png (or .jpg) - The "SKYWRITER" text logo for the header
+
+Then run: python3 process_images.py
+
+The script will automatically process and place them in the correct locations.

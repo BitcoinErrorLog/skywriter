@@ -22,32 +22,20 @@ class MainActivity : AppCompatActivity() {
         // Hide action bar - we use custom header instead
         supportActionBar?.hide()
         
-        // Setup menu button in header (do this early, before navigation)
+        // Setup menu button in header
         setupMenuButton()
         
-        // Wait for NavHostFragment to be ready - FragmentContainerView creates it synchronously
+        // Get NavHostFragment - FragmentContainerView creates it synchronously
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         
-        if (navHostFragment == null) {
-            android.util.Log.e("MainActivity", "NavHostFragment not found - this should not happen")
-            // Don't return early - let the activity continue, navigation just won't work
-            return
-        }
-        
-        // Get NavController - it should be available after fragment is attached
-        try {
-            navController = navHostFragment.navController
-        } catch (e: Exception) {
-            android.util.Log.e("MainActivity", "Failed to get NavController: ${e.message}", e)
-            return
-        }
+        navController = navHostFragment?.navController
         
         // Set up top-level destinations (no back button on these)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.characterListFragment)
-        )
         navController?.let { controller ->
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(R.id.characterListFragment)
+            )
             setupActionBarWithNavController(controller, appBarConfiguration)
         }
         

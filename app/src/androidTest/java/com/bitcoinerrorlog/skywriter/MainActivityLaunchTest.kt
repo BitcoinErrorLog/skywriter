@@ -130,13 +130,11 @@ class MainActivityLaunchTest {
         Log.d("MainActivityLaunchTest", "Testing no crashes on launch")
         
         val latch = CountDownLatch(1)
-        var crashed = false
         var crashMessage: String? = null
         
         // Set up uncaught exception handler
         val originalHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler { thread, exception ->
-            crashed = true
             crashMessage = exception.message
             Log.e("MainActivityLaunchTest", "CRASH DETECTED", exception)
             originalHandler?.uncaughtException(thread, exception)

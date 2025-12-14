@@ -2,6 +2,8 @@
 
 <div align="center">
 
+<img src="skywriter_full_logo.png" alt="Skywriter Logo" width="600"/>
+
 **A beautiful Android app for writing character NFC data to physical tags**
 
 [![Android](https://img.shields.io/badge/Android-7.0%2B-green.svg)](https://www.android.com/)

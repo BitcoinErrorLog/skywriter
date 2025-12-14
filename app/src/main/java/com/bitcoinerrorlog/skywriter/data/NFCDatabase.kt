@@ -96,7 +96,7 @@ class NFCDatabase(private val context: Context) {
     private fun parseCharacterJSON(
         inputStream: InputStream,
         filename: String,
-        directory: String
+        @Suppress("UNUSED_PARAMETER") directory: String
     ): CharacterModel? {
         return try {
             val jsonString = inputStream.bufferedReader().use { it.readText() }
@@ -106,8 +106,8 @@ class NFCDatabase(private val context: Context) {
             val metadata = CharacterMetadata(
                 originalFilename = metadataJson.getString("original_filename"),
                 originalPath = metadataJson.getString("original_path"),
-                category = metadataJson.optString("category", null),
-                subcategory = metadataJson.optString("subcategory", null)
+                category = metadataJson.optString("category").takeIf { it.isNotEmpty() },
+                subcategory = metadataJson.optString("subcategory").takeIf { it.isNotEmpty() }
             )
             
             CharacterModel(

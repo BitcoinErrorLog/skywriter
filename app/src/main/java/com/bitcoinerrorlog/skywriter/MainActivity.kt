@@ -15,9 +15,21 @@ class MainActivity : AppCompatActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         
-        nfcManager = NFCManager(this)
+        try {
+            setContentView(R.layout.activity_main)
+            android.util.Log.d("MainActivity", "Layout inflated successfully")
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to inflate layout", e)
+            throw e
+        }
+        
+        try {
+            nfcManager = NFCManager(this)
+            android.util.Log.d("MainActivity", "NFCManager created")
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to create NFCManager", e)
+        }
         
         // Hide action bar - we use custom header instead
         supportActionBar?.hide()
@@ -25,43 +37,43 @@ class MainActivity : AppCompatActivity() {
         // Setup menu button in header
         setupMenuButton()
         
-        // Wait for NavHostFragment to be created using FragmentManager listener
-        // FragmentContainerView with android:name creates fragment asynchronously
-        supportFragmentManager.registerFragmentLifecycleCallbacks(
-            object : androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
-                override fun onFragmentCreated(
-                    fm: androidx.fragment.app.FragmentManager,
-                    f: androidx.fragment.app.Fragment,
-                    savedInstanceState: Bundle?
-                ) {
-                    if (f is NavHostFragment && f.id == R.id.nav_host_fragment) {
-                        setupNavigation(f)
-                        supportFragmentManager.unregisterFragmentLifecycleCallbacks(this)
-                    }
-                }
-            },
-            true
-        )
-        
-        // Also try immediately in case fragment is already created
-        setupNavigation()
+        // Get NavHostFragment - use post to ensure view is ready
+        val containerView = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.nav_host_fragment)
+        if (containerView != null) {
+            containerView.post {
+                setupNavigation()
+            }
+        } else {
+            android.util.Log.e("MainActivity", "FragmentContainerView not found!")
+        }
         
         // Handle initial intent if app was launched with NFC intent
         handleIntent(intent)
     }
     
-    private fun setupNavigation(navHostFragment: NavHostFragment? = null) {
-        val fragment = navHostFragment ?: (supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
-        
-        if (fragment != null && navController == null) {
-            navController = fragment.navController
+    private fun setupNavigation() {
+        try {
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+            
+            if (navHostFragment == null) {
+                android.util.Log.e("MainActivity", "NavHostFragment is null")
+                return
+            }
+            
+            navController = navHostFragment.navController
+            android.util.Log.d("MainActivity", "NavController obtained: ${navController != null}")
             
             // Set up top-level destinations (no back button on these)
-            val appBarConfiguration = AppBarConfiguration(
-                setOf(R.id.characterListFragment)
-            )
-            setupActionBarWithNavController(navController!!, appBarConfiguration)
+            navController?.let { controller ->
+                val appBarConfiguration = AppBarConfiguration(
+                    setOf(R.id.characterListFragment)
+                )
+                setupActionBarWithNavController(controller, appBarConfiguration)
+                android.util.Log.d("MainActivity", "Navigation setup complete")
+            } ?: android.util.Log.e("MainActivity", "NavController is null after setup")
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Error in setupNavigation", e)
         }
     }
     

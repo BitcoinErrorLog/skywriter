@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Skywriter</string>
+    <string name="characters">Characters</string>
+    <string name="write_to_tag">Write to Tag</string>
+    <string name="tap_nfc_tag">Tap your phone to an NFC tag</string>
+    <string name="writing">Writing…</string>
+    <string name="write_success">Successfully written to tag!</string>
+    <string name="write_error">Failed to write to tag</string>
+    <string name="nfc_not_available">NFC is not available on this device</string>
+    <string name="tag_not_supported">Tag is not supported. Please use a Mifare Classic tag.</string>
+    <string name="authentication_failed">Authentication failed. Tag may be locked.</string>
+    <string name="select_character">Select a character</string>
+    <string name="character_details">Character Details</string>
+    <string name="search_characters">Search characters…</string>
+</resources>
+

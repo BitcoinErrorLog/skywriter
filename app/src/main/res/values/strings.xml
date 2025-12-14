@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Skywriter</string>
+    <string name="app_label">Skywriter</string>
     <string name="characters">Characters</string>
     <string name="write_to_tag">Write to Tag</string>
     <string name="tap_nfc_tag">Tap your phone to an NFC tag</string>

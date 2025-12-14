@@ -7,5 +7,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- Skywriter brand colors -->
+    <color name="skywriter_blue">#1E3A8A</color>
+    <color name="skywriter_yellow">#FCD34D</color>
+    <color name="skywriter_dark_blue">#1E40AF</color>
 </resources>
 

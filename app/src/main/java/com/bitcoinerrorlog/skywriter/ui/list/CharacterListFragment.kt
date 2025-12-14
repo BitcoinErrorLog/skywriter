@@ -66,6 +66,10 @@ class CharacterListFragment : Fragment() {
                 else -> false
             }
         }
+        
+        // Show header logo if available (will be visible by default if PNG exists)
+        // The logo is in the layout above the toolbar, so it will show automatically
+        // if the drawable resource exists
     }
     
     private fun setupRecyclerView() {

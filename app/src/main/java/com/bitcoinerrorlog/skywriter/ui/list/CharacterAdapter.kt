@@ -13,7 +13,7 @@ import com.bitcoinerrorlog.skywriter.databinding.ItemCharacterBinding
 import com.bitcoinerrorlog.skywriter.databinding.ItemGameHeaderBinding
 
 sealed class ListItem {
-    data class Header(val gameTitle: String, var isExpanded: Boolean = true) : ListItem()
+    data class Header(val gameTitle: String, var isExpanded: Boolean = false) : ListItem()
     data class Character(val character: CharacterModel) : ListItem()
 }
 
@@ -38,9 +38,9 @@ class CharacterAdapter(
         val newItems = mutableListOf<ListItem>()
         
         charactersByGame.forEach { (gameTitle, characters) ->
-            // Find existing header state or default to expanded
+            // Find existing header state or default to collapsed
             val existingHeader = items.find { it is ListItem.Header && it.gameTitle == gameTitle } as? ListItem.Header
-            val isExpanded = existingHeader?.isExpanded ?: true
+            val isExpanded = existingHeader?.isExpanded ?: false
             
             newItems.add(ListItem.Header(gameTitle, isExpanded))
             if (isExpanded) {

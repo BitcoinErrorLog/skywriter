@@ -18,6 +18,16 @@
             android:orientation="vertical"
             android:padding="24dp">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/close_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:text="@android:string/cancel"
+                app:icon="@android:drawable/ic_menu_close_clear_cancel"
+                app:iconGravity="textStart" />
+
             <TextView
                 android:id="@+id/character_name"
                 android:layout_width="match_parent"

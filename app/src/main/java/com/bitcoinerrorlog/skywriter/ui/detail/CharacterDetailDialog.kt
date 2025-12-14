@@ -43,6 +43,11 @@ class CharacterDetailDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
+        // Add close button handler
+        binding.closeButton.setOnClickListener {
+            dismiss()
+        }
+        
         character?.let { char ->
             binding.characterName.text = char.metadata.displayName
             binding.characterGame.text = char.metadata.gameSeries

@@ -139,14 +139,36 @@ class NFCDatabase(private val context: Context) {
     }
     
     fun searchCharacters(query: String): List<CharacterModel> {
-        val lowerQuery = query.lowercase()
-        val results = charactersCache.filter {
-            it.metadata.displayName.lowercase().contains(lowerQuery) ||
-            it.metadata.gameSeries.lowercase().contains(lowerQuery) ||
-            it.metadata.subcategory?.lowercase()?.contains(lowerQuery) == true
+        if (query.isBlank()) {
+            return charactersCache
         }
-        Log.d(TAG, "Search '$query' returned ${results.size} results")
-        return results
+        
+        val lowerQuery = query.lowercase().trim()
+        val results = charactersCache.filter { character ->
+            val name = character.metadata.displayName.lowercase()
+            val game = character.metadata.gameSeries.lowercase()
+            val subcategory = character.metadata.subcategory?.lowercase() ?: ""
+            
+            // Check if query matches any part of name, game, or subcategory
+            name.contains(lowerQuery) ||
+            game.contains(lowerQuery) ||
+            subcategory.contains(lowerQuery) ||
+            // Also check if any word in the name starts with the query (for faster typing)
+            name.split(" ").any { it.startsWith(lowerQuery) }
+        }
+        
+        // Sort results: exact matches first, then by relevance
+        val sortedResults = results.sortedWith(compareBy<CharacterModel> { character ->
+            val name = character.metadata.displayName.lowercase()
+            when {
+                name.startsWith(lowerQuery) -> 0  // Exact start match
+                name.contains(lowerQuery) -> 1    // Contains match
+                else -> 2                         // Other matches
+            }
+        }.thenBy { it.metadata.displayName })
+        
+        Log.d(TAG, "Search '$query' returned ${sortedResults.size} results")
+        return sortedResults
     }
     
     fun getCharacterByUid(uid: String): CharacterModel? {

@@ -75,18 +75,28 @@ class CharacterListFragment : Fragment() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query = s?.toString() ?: ""
+                val query = s?.toString()?.trim() ?: ""
+                Log.d(TAG, "Search query changed: '$query'")
                 if (query.isBlank()) {
                     // Show all characters organized by game
                     viewModel.loadCharacters()
                 } else {
-                    // Show search results
+                    // Show search results immediately
                     viewModel.searchCharacters(query)
                 }
             }
             
             override fun afterTextChanged(s: Editable?) {}
         })
+        
+        // Also handle search button press
+        binding.searchEditText.setOnEditorActionListener { _, _, _ ->
+            val query = binding.searchEditText.text?.toString()?.trim() ?: ""
+            if (query.isNotBlank()) {
+                viewModel.searchCharacters(query)
+            }
+            true
+        }
     }
     
     private fun setupSearchFab() {
@@ -136,17 +146,20 @@ class CharacterListFragment : Fragment() {
         
         // Observe search results (flat list)
         viewModel.characters.observe(viewLifecycleOwner) { characters ->
-            if (binding.searchCard.visibility == View.VISIBLE && 
-                binding.searchEditText.text?.isNotBlank() == true) {
+            val isSearchMode = binding.searchCard.visibility == View.VISIBLE && 
+                              binding.searchEditText.text?.toString()?.trim()?.isNotBlank() == true
+            
+            if (isSearchMode) {
                 // In search mode, show flat list
                 Log.d(TAG, "Search results: ${characters.size} characters")
                 if (characters.isNotEmpty()) {
-                    val searchResults = mapOf("Search Results" to characters)
+                    val searchResults = mapOf("Search Results (${characters.size})" to characters)
                     adapter.submitList(searchResults)
                     binding.emptyStateText.visibility = View.GONE
                     binding.charactersRecyclerView.visibility = View.VISIBLE
                 } else {
                     adapter.submitList(emptyMap())
+                    binding.emptyStateText.text = "No characters found matching your search"
                     binding.emptyStateText.visibility = View.VISIBLE
                     binding.charactersRecyclerView.visibility = View.GONE
                 }

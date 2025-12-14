@@ -14,4 +14,9 @@
         android:name="com.bitcoinerrorlog.skywriter.ui.write.WriteNFCFragment"
         android:label="@string/write_to_tag" />
 
+    <fragment
+        android:id="@+id/tagCheckFragment"
+        android:name="com.bitcoinerrorlog.skywriter.ui.check.TagCheckFragment"
+        android:label="@string/check_tag_compatibility" />
+
 </navigation>

@@ -14,5 +14,15 @@
     <string name="character_details">Character Details</string>
     <string name="search_characters">Search characters…</string>
     <string name="no_characters_found">No characters found</string>
+    <string name="check_tag_compatibility">Check Tag Compatibility</string>
+    <string name="checking_compatibility">Checking compatibility…</string>
+    <string name="tag_compatible">Tag is compatible!</string>
+    <string name="tap_tag_to_check">Tap an NFC tag to check compatibility</string>
+    <string name="compatibility_warning_continue">You can still write to this tag, but the UID cannot be changed.</string>
+    <string name="tap_again_to_write">Tap the tag again to write</string>
+    <string name="check_again">Check Another Tag</string>
+    <string name="issues">Issues</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="tag_compatibility">Tag Compatibility</string>
 </resources>
 

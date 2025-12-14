@@ -16,6 +16,9 @@ import com.bitcoinerrorlog.skywriter.data.CharacterModel
 import com.bitcoinerrorlog.skywriter.databinding.FragmentWriteNfcBinding
 import com.bitcoinerrorlog.skywriter.nfc.MifareClassicWriter
 import com.bitcoinerrorlog.skywriter.nfc.NFCManager
+import com.bitcoinerrorlog.skywriter.nfc.CompatibilityResult
+import com.bitcoinerrorlog.skywriter.nfc.TagCompatibilityChecker
+import com.bitcoinerrorlog.skywriter.nfc.TagCompatibilityInfo
 import com.bitcoinerrorlog.skywriter.nfc.WriteResult
 import kotlinx.coroutines.launch
 
@@ -26,7 +29,9 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     private lateinit var nfcManager: NFCManager
     private val writer = MifareClassicWriter()
+    private val compatibilityChecker = TagCompatibilityChecker()
     private var character: CharacterModel? = null
+    private var compatibilityChecked = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +68,8 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         
+        // Reset compatibility check when fragment is created
+        compatibilityChecked = false
         updateUI(WriteState.Waiting)
     }
     
@@ -84,9 +91,80 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             return
         }
         
-        character?.let { char ->
-            writeToTag(tag, char)
+        // Check compatibility before writing
+        if (!compatibilityChecked) {
+            checkCompatibilityThenWrite(tag)
+        } else {
+            character?.let { char ->
+                writeToTag(tag, char)
+            }
         }
+    }
+    
+    private fun checkCompatibilityThenWrite(tag: android.nfc.Tag) {
+        updateUI(WriteState.Checking)
+        
+        lifecycleScope.launch {
+            val compatibilityInfo = compatibilityChecker.checkCompatibility(tag)
+            
+            when (val result = compatibilityInfo.result) {
+                is CompatibilityResult.Compatible -> {
+                    // Tag is compatible, proceed with write
+                    compatibilityChecked = true
+                    character?.let { char ->
+                        writeToTag(tag, char)
+                    }
+                }
+                is CompatibilityResult.Warning -> {
+                    // Show warning but allow write
+                    showCompatibilityWarning(compatibilityInfo, result)
+                    compatibilityChecked = true
+                }
+                is CompatibilityResult.Incompatible -> {
+                    // Tag is incompatible, show error
+                    showCompatibilityError(compatibilityInfo, result)
+                }
+            }
+        }
+    }
+    
+    private fun showCompatibilityWarning(@Suppress("UNUSED_PARAMETER") info: TagCompatibilityInfo, warning: CompatibilityResult.Warning) {
+        val message = buildString {
+            append(warning.message)
+            if (warning.details.isNotEmpty()) {
+                append("\n\n")
+                append(warning.details.joinToString("\n"))
+            }
+            append("\n\n")
+            append(getString(R.string.compatibility_warning_continue))
+        }
+        
+        binding.statusText.text = message
+        binding.statusText.setTextColor(
+            resources.getColor(android.R.color.holo_orange_dark, null)
+        )
+        binding.instructionText.text = getString(R.string.tap_again_to_write)
+    }
+    
+    private fun showCompatibilityError(info: TagCompatibilityInfo, error: CompatibilityResult.Incompatible) {
+        val message = buildString {
+            append(error.reason)
+            if (error.details.isNotEmpty()) {
+                append("\n\n")
+                append("Issues:\n")
+                error.details.forEach { detail ->
+                    append("• $detail\n")
+                }
+            }
+            if (info.recommendations.isNotEmpty()) {
+                append("\nRecommendations:\n")
+                info.recommendations.forEach { rec ->
+                    append("• $rec\n")
+                }
+            }
+        }
+        
+        showError(message)
     }
     
     private fun writeToTag(tag: android.nfc.Tag, character: CharacterModel) {
@@ -122,6 +200,11 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
                 binding.progressBar.visibility = View.GONE
                 binding.statusText.text = ""
                 binding.instructionText.text = getString(R.string.tap_nfc_tag)
+            }
+            WriteState.Checking -> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.statusText.text = getString(R.string.checking_compatibility)
+                binding.instructionText.text = getString(R.string.checking_compatibility)
             }
             WriteState.Writing -> {
                 binding.progressBar.visibility = View.VISIBLE
@@ -165,7 +248,7 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     }
     
     private enum class WriteState {
-        Waiting, Writing
+        Waiting, Checking, Writing
     }
 }
 

@@ -95,13 +95,25 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
         updateUI(CheckState.Checking)
         
         lifecycleScope.launch {
-            val compatibilityInfo = compatibilityChecker.checkCompatibility(tag)
-            lastCompatibilityInfo = compatibilityInfo
-            displayCompatibilityInfo(compatibilityInfo)
+            try {
+                val compatibilityInfo = compatibilityChecker.checkCompatibility(tag)
+                lastCompatibilityInfo = compatibilityInfo
+                if (isAdded && view != null) {
+                    displayCompatibilityInfo(compatibilityInfo)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("TagCheckFragment", "Error checking tag", e)
+                if (isAdded && view != null) {
+                    showError("Error checking tag: ${e.message ?: "Unknown error"}")
+                    updateUI(CheckState.Ready)
+                }
+            }
         }
     }
     
     private fun displayCompatibilityInfo(info: TagCompatibilityInfo) {
+        if (!isAdded || view == null) return
+        
         updateUI(CheckState.Complete)
         
         // Set overall status
@@ -110,21 +122,21 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
                 binding.statusIcon.setImageResource(android.R.drawable.ic_dialog_info)
                 binding.statusText.text = getString(R.string.tag_compatible)
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.holo_green_dark, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_green_dark)
                 )
             }
             is CompatibilityResult.Warning -> {
                 binding.statusIcon.setImageResource(android.R.drawable.ic_dialog_alert)
                 binding.statusText.text = result.message
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.holo_orange_dark, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_orange_dark)
                 )
             }
             is CompatibilityResult.Incompatible -> {
                 binding.statusIcon.setImageResource(android.R.drawable.ic_dialog_alert)
                 binding.statusText.text = result.reason
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.holo_red_dark, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
                 )
             }
         }
@@ -170,13 +182,15 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     }
     
     private fun updateUI(state: CheckState) {
+        if (!isAdded || view == null) return
+        
         when (state) {
             CheckState.Ready -> {
                 binding.progressBar.visibility = View.GONE
                 binding.statusIcon.visibility = View.VISIBLE
                 binding.statusText.text = getString(R.string.tap_check_button)
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.darker_gray, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
                 )
                 binding.detailsText.text = ""
                 binding.issuesTitle.visibility = View.GONE
@@ -192,7 +206,7 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
                 binding.statusIcon.visibility = View.VISIBLE
                 binding.statusText.text = getString(R.string.tap_tag_to_check)
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.darker_gray, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.darker_gray)
                 )
                 binding.checkButton.isEnabled = false
             }
@@ -201,7 +215,7 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
                 binding.statusIcon.visibility = View.VISIBLE
                 binding.statusText.text = getString(R.string.tag_detected)
                 binding.statusText.setTextColor(
-                    resources.getColor(android.R.color.holo_blue_dark, null)
+                    androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_blue_dark)
                 )
                 binding.checkButton.isEnabled = true
             }
@@ -221,10 +235,12 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     }
     
     private fun showError(message: String) {
+        if (!isAdded || view == null) return
+        
         binding.progressBar.visibility = View.GONE
         binding.statusText.text = message
         binding.statusText.setTextColor(
-            resources.getColor(android.R.color.holo_red_dark, null)
+            androidx.core.content.ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
         )
     }
     

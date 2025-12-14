@@ -218,16 +218,19 @@ class TagCompatibilityChecker {
             if (authenticationTest && blockCount > 0) {
                 try {
                     val block0 = mifare.readBlock(0)
-                    // Try to write block 0 (this will fail if UID is locked)
-                    try {
-                        mifare.writeBlock(0, block0)
-                        uidChangeable = true
-                    } catch (e: Exception) {
-                        uidChangeable = false
-                        // This is expected and not a critical issue
+                    if (block0 != null && block0.size == 16) {
+                        // Try to write block 0 (this will fail if UID is locked)
+                        try {
+                            mifare.writeBlock(0, block0)
+                            uidChangeable = true
+                        } catch (e: Exception) {
+                            uidChangeable = false
+                            // This is expected and not a critical issue
+                        }
                     }
                 } catch (e: Exception) {
                     // Can't determine
+                    Log.d(TAG, "Could not determine UID changeability: ${e.message}")
                 }
             }
             

@@ -24,6 +24,8 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     private lateinit var nfcManager: NFCManager
     private val compatibilityChecker = TagCompatibilityChecker()
     private var lastCompatibilityInfo: TagCompatibilityInfo? = null
+    private var waitingForTag = false
+    private var currentTag: android.nfc.Tag? = null
     
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,27 +46,30 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             return
         }
         
-        binding.checkAgainButton.setOnClickListener {
-            lastCompatibilityInfo = null
-            updateUI(CheckState.Waiting)
+        binding.checkButton.setOnClickListener {
+            if (currentTag != null) {
+                // Tag already detected, check it
+                checkTag(currentTag!!)
+            } else {
+                // Start waiting for tag
+                waitingForTag = true
+                updateUI(CheckState.WaitingForTag)
+            }
         }
         
-        updateUI(CheckState.Waiting)
+        binding.checkAgainButton.setOnClickListener {
+            lastCompatibilityInfo = null
+            currentTag = null
+            waitingForTag = false
+            updateUI(CheckState.Ready)
+        }
+        
+        updateUI(CheckState.Ready)
     }
     
     override fun onResume() {
         super.onResume()
         nfcManager.enableForegroundDispatch()
-        
-        // Check if we have a pending NFC intent
-        (requireActivity() as? MainActivity)?.let { activity ->
-            activity.intent?.let { intent ->
-                if (intent.action == android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED || 
-                    intent.action == android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED) {
-                    onNfcTagDetected(intent)
-                }
-            }
-        }
     }
     
     override fun onPause() {
@@ -74,10 +79,19 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     override fun onNfcTagDetected(intent: Intent) {
         val tag = nfcManager.getTagFromIntent(intent) ?: return
-        checkTag(tag)
+        currentTag = tag
+        
+        // If user tapped check button and is waiting, proceed
+        if (waitingForTag) {
+            checkTag(tag)
+        } else {
+            // Just store the tag, wait for user to tap check button
+            updateUI(CheckState.TagDetected)
+        }
     }
     
     private fun checkTag(tag: android.nfc.Tag) {
+        waitingForTag = false
         updateUI(CheckState.Checking)
         
         lifecycleScope.launch {
@@ -157,10 +171,10 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     private fun updateUI(state: CheckState) {
         when (state) {
-            CheckState.Waiting -> {
+            CheckState.Ready -> {
                 binding.progressBar.visibility = View.GONE
                 binding.statusIcon.visibility = View.VISIBLE
-                binding.statusText.text = getString(R.string.tap_tag_to_check)
+                binding.statusText.text = getString(R.string.tap_check_button)
                 binding.statusText.setTextColor(
                     resources.getColor(android.R.color.darker_gray, null)
                 )
@@ -169,16 +183,39 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
                 binding.issuesText.visibility = View.GONE
                 binding.recommendationsTitle.visibility = View.GONE
                 binding.recommendationsText.visibility = View.GONE
+                binding.checkButton.isEnabled = true
+                binding.checkButton.visibility = View.VISIBLE
                 binding.checkAgainButton.visibility = View.GONE
+            }
+            CheckState.WaitingForTag -> {
+                binding.progressBar.visibility = View.GONE
+                binding.statusIcon.visibility = View.VISIBLE
+                binding.statusText.text = getString(R.string.tap_tag_to_check)
+                binding.statusText.setTextColor(
+                    resources.getColor(android.R.color.darker_gray, null)
+                )
+                binding.checkButton.isEnabled = false
+            }
+            CheckState.TagDetected -> {
+                binding.progressBar.visibility = View.GONE
+                binding.statusIcon.visibility = View.VISIBLE
+                binding.statusText.text = getString(R.string.tag_detected)
+                binding.statusText.setTextColor(
+                    resources.getColor(android.R.color.holo_blue_dark, null)
+                )
+                binding.checkButton.isEnabled = true
             }
             CheckState.Checking -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.statusIcon.visibility = View.GONE
                 binding.statusText.text = getString(R.string.checking_compatibility)
+                binding.checkButton.isEnabled = false
             }
             CheckState.Complete -> {
                 binding.progressBar.visibility = View.GONE
                 binding.statusIcon.visibility = View.VISIBLE
+                binding.checkButton.visibility = View.GONE
+                binding.checkAgainButton.visibility = View.VISIBLE
             }
         }
     }
@@ -197,7 +234,7 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     }
     
     private enum class CheckState {
-        Waiting, Checking, Complete
+        Ready, WaitingForTag, TagDetected, Checking, Complete
     }
 }
 

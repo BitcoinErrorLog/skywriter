@@ -105,12 +105,23 @@
             app:layout_constraintTop_toBottomOf="@id/recommendations_title" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/check_again_button"
+            android:id="@+id/check_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:text="@string/check_tag"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_text" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/check_again_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:text="@string/check_again"
             android:visibility="gone"
+            style="@style/Widget.Material3.Button.TextButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recommendations_text" />

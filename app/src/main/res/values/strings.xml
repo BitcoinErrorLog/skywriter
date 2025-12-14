@@ -25,5 +25,11 @@
     <string name="recommendations">Recommendations</string>
     <string name="tag_compatibility">Tag Compatibility</string>
     <string name="expand_collapse">Expand or collapse</string>
+    <string name="tap_write_button">Tap the Write button below, then tap your NFC tag</string>
+    <string name="tag_detected">Tag detected!</string>
+    <string name="tap_write_to_continue">Tap Write to check and write</string>
+    <string name="write_anyway">Write Anyway</string>
+    <string name="check_tag">Check Tag</string>
+    <string name="tap_check_button">Tap the Check Tag button below, then tap your NFC tag</string>
 </resources>
 

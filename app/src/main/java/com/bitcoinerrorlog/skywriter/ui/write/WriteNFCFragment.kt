@@ -32,7 +32,8 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     private val writer = MifareClassicWriter()
     private val compatibilityChecker = TagCompatibilityChecker()
     private var character: CharacterModel? = null
-    private var compatibilityChecked = false
+    private var waitingForTag = false
+    private var currentTag: android.nfc.Tag? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,13 +66,25 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             binding.characterGame.text = char.metadata.gameSeries
         }
         
+        binding.writeButton.setOnClickListener {
+            if (currentTag != null) {
+                // Tag already detected, check and write
+                checkCompatibilityThenWrite(currentTag!!)
+            } else {
+                // Start waiting for tag
+                waitingForTag = true
+                updateUI(WriteState.WaitingForTag)
+            }
+        }
+        
         binding.cancelButton.setOnClickListener {
             findNavController().navigateUp()
         }
         
-        // Reset compatibility check when fragment is created
-        compatibilityChecked = false
-        updateUI(WriteState.Waiting)
+        // Reset state when fragment is created
+        waitingForTag = false
+        currentTag = null
+        updateUI(WriteState.Ready)
     }
     
     override fun onResume() {
@@ -86,23 +99,19 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     override fun onNfcTagDetected(intent: Intent) {
         val tag = nfcManager.getTagFromIntent(intent) ?: return
+        currentTag = tag
         
-        if (!nfcManager.isMifareClassicTag(tag)) {
-            showError(getString(R.string.tag_not_supported))
-            return
-        }
-        
-        // Check compatibility before writing
-        if (!compatibilityChecked) {
+        // If user tapped write button and is waiting, proceed
+        if (waitingForTag) {
             checkCompatibilityThenWrite(tag)
         } else {
-            character?.let { char ->
-                writeToTag(tag, char)
-            }
+            // Just store the tag, wait for user to tap write button
+            updateUI(WriteState.TagDetected)
         }
     }
     
     private fun checkCompatibilityThenWrite(tag: android.nfc.Tag) {
+        waitingForTag = false
         updateUI(WriteState.Checking)
         
         lifecycleScope.launch {
@@ -111,40 +120,47 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             when (val result = compatibilityInfo.result) {
                 is CompatibilityResult.Compatible -> {
                     // Tag is compatible, proceed with write
-                    compatibilityChecked = true
                     character?.let { char ->
                         writeToTag(tag, char)
                     }
                 }
                 is CompatibilityResult.Warning -> {
                     // Show warning but allow write
-                    showCompatibilityWarning(compatibilityInfo, result)
-                    compatibilityChecked = true
+                    showCompatibilityWarning(compatibilityInfo, result) {
+                        character?.let { char ->
+                            writeToTag(tag, char)
+                        }
+                    }
                 }
                 is CompatibilityResult.Incompatible -> {
                     // Tag is incompatible, show error
                     showCompatibilityError(compatibilityInfo, result)
+                    currentTag = null
                 }
             }
         }
     }
     
-    private fun showCompatibilityWarning(@Suppress("UNUSED_PARAMETER") info: TagCompatibilityInfo, warning: CompatibilityResult.Warning) {
+    private fun showCompatibilityWarning(info: TagCompatibilityInfo, warning: CompatibilityResult.Warning, onContinue: () -> Unit) {
         val message = buildString {
             append(warning.message)
             if (warning.details.isNotEmpty()) {
                 append("\n\n")
                 append(warning.details.joinToString("\n"))
             }
-            append("\n\n")
-            append(getString(R.string.compatibility_warning_continue))
         }
         
         binding.statusText.text = message
         binding.statusText.setTextColor(
             resources.getColor(android.R.color.holo_orange_dark, null)
         )
-        binding.instructionText.text = getString(R.string.tap_again_to_write)
+        binding.instructionText.text = getString(R.string.compatibility_warning_continue)
+        
+        // Update write button to continue
+        binding.writeButton.text = getString(R.string.write_anyway)
+        binding.writeButton.setOnClickListener {
+            onContinue()
+        }
     }
     
     private fun showCompatibilityError(info: TagCompatibilityInfo, error: CompatibilityResult.Incompatible) {
@@ -197,20 +213,36 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     private fun updateUI(state: WriteState) {
         when (state) {
-            WriteState.Waiting -> {
+            WriteState.Ready -> {
+                binding.progressBar.visibility = View.GONE
+                binding.statusText.text = ""
+                binding.instructionText.text = getString(R.string.tap_write_button)
+                binding.writeButton.isEnabled = true
+                binding.writeButton.text = getString(R.string.write_to_tag)
+            }
+            WriteState.WaitingForTag -> {
                 binding.progressBar.visibility = View.GONE
                 binding.statusText.text = ""
                 binding.instructionText.text = getString(R.string.tap_nfc_tag)
+                binding.writeButton.isEnabled = false
+            }
+            WriteState.TagDetected -> {
+                binding.progressBar.visibility = View.GONE
+                binding.statusText.text = getString(R.string.tag_detected)
+                binding.instructionText.text = getString(R.string.tap_write_to_continue)
+                binding.writeButton.isEnabled = true
             }
             WriteState.Checking -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.statusText.text = getString(R.string.checking_compatibility)
                 binding.instructionText.text = getString(R.string.checking_compatibility)
+                binding.writeButton.isEnabled = false
             }
             WriteState.Writing -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.statusText.text = getString(R.string.writing)
                 binding.instructionText.text = getString(R.string.writing)
+                binding.writeButton.isEnabled = false
             }
         }
     }
@@ -222,6 +254,9 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             resources.getColor(android.R.color.holo_green_dark, null)
         )
         binding.instructionText.text = ""
+        binding.writeButton.isEnabled = false
+        currentTag = null
+        waitingForTag = false
     }
     
     private fun showError(message: String) {
@@ -231,6 +266,10 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             resources.getColor(android.R.color.holo_red_dark, null)
         )
         binding.instructionText.text = ""
+        binding.writeButton.isEnabled = true
+        binding.writeButton.text = getString(R.string.write_to_tag)
+        currentTag = null
+        waitingForTag = false
     }
     
     private fun vibrate() {
@@ -249,7 +288,7 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     }
     
     private enum class WriteState {
-        Waiting, Checking, Writing
+        Ready, WaitingForTag, TagDetected, Checking, Writing
     }
 }
 

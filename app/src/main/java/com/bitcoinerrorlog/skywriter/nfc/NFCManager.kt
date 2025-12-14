@@ -22,11 +22,17 @@ class NFCManager(private val activity: Activity) {
         get() = nfcAdapter != null && nfcAdapter.isEnabled
     
     fun enableForegroundDispatch() {
+        // Listen for all NFC tag types, not just Mifare Classic
+        val intentFilters = arrayOf(
+            IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED),
+            IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED)
+        )
+        // Tech lists: null means we accept all technologies
         nfcAdapter?.enableForegroundDispatch(
             activity,
             pendingIntent,
-            arrayOf(IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED)),
-            arrayOf(arrayOf(MifareClassic::class.java.name))
+            intentFilters,
+            null // No tech lists - we want all tags
         )
     }
     

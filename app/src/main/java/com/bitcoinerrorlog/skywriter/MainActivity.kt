@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         
         // Set up top-level destinations (no back button on these)
         val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.characterListFragment, R.id.tagCheckFragment)
+            setOf(R.id.characterListFragment)
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         

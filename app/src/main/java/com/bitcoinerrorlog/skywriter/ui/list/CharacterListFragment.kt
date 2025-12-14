@@ -52,24 +52,25 @@ class CharacterListFragment : Fragment() {
     }
     
     private fun setupToolbar() {
-        binding.toolbar.inflateMenu(R.menu.main_menu)
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_search -> {
-                    toggleSearch()
-                    true
+        // Setup menu button with popup menu
+        binding.menuButton.setOnClickListener { view ->
+            val popup = android.widget.PopupMenu(requireContext(), view)
+            popup.menuInflater.inflate(R.menu.main_menu, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_search -> {
+                        toggleSearch()
+                        true
+                    }
+                    R.id.action_check_tag -> {
+                        findNavController().navigate(R.id.tagCheckFragment)
+                        true
+                    }
+                    else -> false
                 }
-                R.id.action_check_tag -> {
-                    findNavController().navigate(R.id.tagCheckFragment)
-                    true
-                }
-                else -> false
             }
+            popup.show()
         }
-        
-        // Show header logo if available (will be visible by default if PNG exists)
-        // The logo is in the layout above the toolbar, so it will show automatically
-        // if the drawable resource exists
     }
     
     private fun setupRecyclerView() {

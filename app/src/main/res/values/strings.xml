@@ -13,5 +13,6 @@
     <string name="select_character">Select a character</string>
     <string name="character_details">Character Details</string>
     <string name="search_characters">Search characters…</string>
+    <string name="no_characters_found">No characters found</string>
 </resources>
 

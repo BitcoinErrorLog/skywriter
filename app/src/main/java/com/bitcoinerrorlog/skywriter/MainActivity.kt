@@ -32,8 +32,42 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         
+        // Setup menu button in header
+        setupMenuButton()
+        
         // Handle initial intent if app was launched with NFC intent
         handleIntent(intent)
+    }
+    
+    private fun setupMenuButton() {
+        findViewById<android.widget.ImageButton>(R.id.menu_button)?.setOnClickListener { view ->
+            val popup = android.widget.PopupMenu(this, view)
+            popup.menuInflater.inflate(R.menu.main_menu, popup.menu)
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_search -> {
+                        // Find CharacterListFragment and trigger search
+                        val navHostFragment = supportFragmentManager
+                            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                        navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
+                            if (fragment is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment) {
+                                fragment.toggleSearch()
+                            } else {
+                                // If not on character list, navigate there first
+                                navController.navigate(R.id.characterListFragment)
+                            }
+                        }
+                        true
+                    }
+                    R.id.action_check_tag -> {
+                        navController.navigate(R.id.tagCheckFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
     }
     
     override fun onSupportNavigateUp(): Boolean {

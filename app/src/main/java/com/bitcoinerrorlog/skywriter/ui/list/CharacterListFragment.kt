@@ -52,25 +52,8 @@ class CharacterListFragment : Fragment() {
     }
     
     private fun setupToolbar() {
-        // Setup menu button with popup menu
-        binding.menuButton.setOnClickListener { view ->
-            val popup = android.widget.PopupMenu(requireContext(), view)
-            popup.menuInflater.inflate(R.menu.main_menu, popup.menu)
-            popup.setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.action_search -> {
-                        toggleSearch()
-                        true
-                    }
-                    R.id.action_check_tag -> {
-                        findNavController().navigate(R.id.tagCheckFragment)
-                        true
-                    }
-                    else -> false
-                }
-            }
-            popup.show()
-        }
+        // Menu button is now handled in MainActivity
+        // No setup needed here
     }
     
     private fun setupRecyclerView() {
@@ -112,7 +95,7 @@ class CharacterListFragment : Fragment() {
         }
     }
     
-    private fun toggleSearch() {
+    fun toggleSearch() {
         isSearchVisible = !isSearchVisible
         if (isSearchVisible) {
             binding.searchCard.visibility = View.VISIBLE

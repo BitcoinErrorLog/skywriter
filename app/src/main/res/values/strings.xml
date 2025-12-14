@@ -24,5 +24,6 @@
     <string name="issues">Issues</string>
     <string name="recommendations">Recommendations</string>
     <string name="tag_compatibility">Tag Compatibility</string>
+    <string name="expand_collapse">Expand or collapse</string>
 </resources>
 

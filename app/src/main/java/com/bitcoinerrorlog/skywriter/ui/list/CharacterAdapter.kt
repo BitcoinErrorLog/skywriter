@@ -13,13 +13,19 @@ import com.bitcoinerrorlog.skywriter.databinding.ItemCharacterBinding
 import com.bitcoinerrorlog.skywriter.databinding.ItemGameHeaderBinding
 
 sealed class ListItem {
-    data class Header(val gameTitle: String) : ListItem()
+    data class Header(val gameTitle: String, var isExpanded: Boolean = true) : ListItem()
     data class Character(val character: CharacterModel) : ListItem()
 }
 
 class CharacterAdapter(
     private val onCharacterClick: (CharacterModel) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    
+    private var onHeaderToggle: ((Int) -> Unit)? = null
+    
+    fun setOnHeaderToggleListener(listener: (Int) -> Unit) {
+        onHeaderToggle = listener
+    }
     
     private val items = mutableListOf<ListItem>()
     
@@ -32,9 +38,15 @@ class CharacterAdapter(
         val newItems = mutableListOf<ListItem>()
         
         charactersByGame.forEach { (gameTitle, characters) ->
-            newItems.add(ListItem.Header(gameTitle))
-            characters.forEach { character ->
-                newItems.add(ListItem.Character(character))
+            // Find existing header state or default to expanded
+            val existingHeader = items.find { it is ListItem.Header && it.gameTitle == gameTitle } as? ListItem.Header
+            val isExpanded = existingHeader?.isExpanded ?: true
+            
+            newItems.add(ListItem.Header(gameTitle, isExpanded))
+            if (isExpanded) {
+                characters.forEach { character ->
+                    newItems.add(ListItem.Character(character))
+                }
             }
         }
         
@@ -44,6 +56,41 @@ class CharacterAdapter(
         items.clear()
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
+    }
+    
+    fun toggleHeader(position: Int) {
+        val item = items[position]
+        if (item is ListItem.Header) {
+            val wasExpanded = item.isExpanded
+            item.isExpanded = !item.isExpanded
+            
+            // Get the characters for this game
+            val characters = charactersByGameCache[item.gameTitle] ?: return
+            
+            if (wasExpanded) {
+                // Collapse: Remove characters
+                repeat(characters.size) {
+                    if (position + 1 < items.size) {
+                        items.removeAt(position + 1)
+                    }
+                }
+                notifyItemRangeRemoved(position + 1, characters.size)
+            } else {
+                // Expand: Insert characters
+                val characterItems = characters.map { ListItem.Character(it) }
+                items.addAll(position + 1, characterItems)
+                notifyItemRangeInserted(position + 1, characters.size)
+            }
+            
+            // Update header icon
+            notifyItemChanged(position)
+        }
+    }
+    
+    private var charactersByGameCache: Map<String, List<CharacterModel>> = emptyMap()
+    
+    fun setCharactersByGame(charactersByGame: Map<String, List<CharacterModel>>) {
+        charactersByGameCache = charactersByGame
     }
     
     override fun getItemViewType(position: Int): Int {
@@ -61,7 +108,9 @@ class CharacterAdapter(
                     parent,
                     false
                 )
-                HeaderViewHolder(binding)
+                HeaderViewHolder(binding) { position ->
+                    onHeaderToggle?.invoke(position)
+                }
             }
             TYPE_CHARACTER -> {
                 val binding = ItemCharacterBinding.inflate(
@@ -77,7 +126,7 @@ class CharacterAdapter(
     
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
-            is ListItem.Header -> (holder as HeaderViewHolder).bind(item.gameTitle)
+            is ListItem.Header -> (holder as HeaderViewHolder).bind(item)
             is ListItem.Character -> (holder as CharacterViewHolder).bind(item.character)
         }
     }
@@ -100,10 +149,21 @@ class CharacterAdapter(
     }
     
     class HeaderViewHolder(
-        private val binding: ItemGameHeaderBinding
+        private val binding: ItemGameHeaderBinding,
+        private val onHeaderClick: (Int) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(gameTitle: String) {
-            binding.gameTitle.text = gameTitle
+        fun bind(header: ListItem.Header) {
+            binding.gameTitle.text = header.gameTitle
+            binding.root.setOnClickListener {
+                onHeaderClick(adapterPosition)
+            }
+            // Update expand icon
+            val iconRes = if (header.isExpanded) {
+                android.R.drawable.arrow_down_float
+            } else {
+                android.R.drawable.arrow_up_float
+            }
+            binding.expandIcon.setImageResource(iconRes)
         }
     }
     

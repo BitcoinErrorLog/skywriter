@@ -55,6 +55,16 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     override fun onResume() {
         super.onResume()
         nfcManager.enableForegroundDispatch()
+        
+        // Check if we have a pending NFC intent
+        (requireActivity() as? MainActivity)?.let { activity ->
+            activity.intent?.let { intent ->
+                if (intent.action == android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED || 
+                    intent.action == android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED) {
+                    onNfcTagDetected(intent)
+                }
+            }
+        }
     }
     
     override fun onPause() {

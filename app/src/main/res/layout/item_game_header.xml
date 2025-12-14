@@ -5,19 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    android:clickable="true"
+    android:focusable="true"
     app:cardBackgroundColor="?attr/colorPrimaryContainer"
     app:cardCornerRadius="8dp"
     app:cardElevation="2dp">
 
-    <TextView
-        android:id="@+id/game_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:padding="16dp"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
-        android:textColor="?attr/colorOnPrimaryContainer"
-        android:textStyle="bold"
-        tools:text="Skylanders 1 Spyro's Adventure" />
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/game_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textStyle="bold"
+            tools:text="Skylanders 1 Spyro's Adventure" />
+
+        <ImageView
+            android:id="@+id/expand_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@android:drawable/arrow_down_float"
+            android:contentDescription="@string/expand_collapse"
+            app:tint="?attr/colorOnPrimaryContainer" />
+
+    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
 

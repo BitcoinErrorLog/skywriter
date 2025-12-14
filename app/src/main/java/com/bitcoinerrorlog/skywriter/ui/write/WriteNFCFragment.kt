@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bitcoinerrorlog.skywriter.MainActivity
 import com.bitcoinerrorlog.skywriter.R
 import com.bitcoinerrorlog.skywriter.data.CharacterModel
@@ -65,7 +66,7 @@ class WriteNFCFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
         }
         
         binding.cancelButton.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
         }
         
         // Reset compatibility check when fragment is created

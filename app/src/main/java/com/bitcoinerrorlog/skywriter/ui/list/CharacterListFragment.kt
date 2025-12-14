@@ -73,6 +73,10 @@ class CharacterListFragment : Fragment() {
             showCharacterDetail(character)
         }
         
+        adapter.setOnHeaderToggleListener { position ->
+            adapter.toggleHeader(position)
+        }
+        
         val layoutManager = GridLayoutManager(context, 2)
         binding.charactersRecyclerView.layoutManager = layoutManager
         binding.charactersRecyclerView.adapter = adapter
@@ -123,6 +127,7 @@ class CharacterListFragment : Fragment() {
         viewModel.charactersByGame.observe(viewLifecycleOwner) { charactersByGame ->
             Log.d(TAG, "charactersByGame updated: ${charactersByGame.size} games")
             if (charactersByGame.isNotEmpty()) {
+                adapter.setCharactersByGame(charactersByGame)
                 adapter.submitList(charactersByGame)
                 binding.emptyStateText.visibility = View.GONE
                 binding.charactersRecyclerView.visibility = View.VISIBLE

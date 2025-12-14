@@ -25,22 +25,44 @@ class MainActivity : AppCompatActivity() {
         // Setup menu button in header
         setupMenuButton()
         
-        // Get NavHostFragment - FragmentContainerView creates it synchronously
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        // Wait for NavHostFragment to be created using FragmentManager listener
+        // FragmentContainerView with android:name creates fragment asynchronously
+        supportFragmentManager.registerFragmentLifecycleCallbacks(
+            object : androidx.fragment.app.FragmentManager.FragmentLifecycleCallbacks() {
+                override fun onFragmentCreated(
+                    fm: androidx.fragment.app.FragmentManager,
+                    f: androidx.fragment.app.Fragment,
+                    savedInstanceState: Bundle?
+                ) {
+                    if (f is NavHostFragment && f.id == R.id.nav_host_fragment) {
+                        setupNavigation(f)
+                        supportFragmentManager.unregisterFragmentLifecycleCallbacks(this)
+                    }
+                }
+            },
+            true
+        )
         
-        navController = navHostFragment?.navController
-        
-        // Set up top-level destinations (no back button on these)
-        navController?.let { controller ->
-            val appBarConfiguration = AppBarConfiguration(
-                setOf(R.id.characterListFragment)
-            )
-            setupActionBarWithNavController(controller, appBarConfiguration)
-        }
+        // Also try immediately in case fragment is already created
+        setupNavigation()
         
         // Handle initial intent if app was launched with NFC intent
         handleIntent(intent)
+    }
+    
+    private fun setupNavigation(navHostFragment: NavHostFragment? = null) {
+        val fragment = navHostFragment ?: (supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment)
+        
+        if (fragment != null && navController == null) {
+            navController = fragment.navController
+            
+            // Set up top-level destinations (no back button on these)
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(R.id.characterListFragment)
+            )
+            setupActionBarWithNavController(navController!!, appBarConfiguration)
+        }
     }
     
     private fun setupMenuButton() {

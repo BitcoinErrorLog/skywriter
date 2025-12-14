@@ -62,7 +62,8 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/search_characters"
         app:srcCompat="@android:drawable/ic_menu_search"
-        app:tint="?attr/colorOnPrimary" />
+        app:tint="@color/white"
+        app:backgroundTint="@color/navy_blue" />
 
     <ProgressBar
         android:id="@+id/progress_bar"

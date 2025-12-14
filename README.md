@@ -51,11 +51,28 @@ A fun Android app that lets you browse characters organized by game series, sele
 - **Target SDK**: 34 (Android 14)
 - **NFC Support**: Mifare Classic 1K tags
 
-## Notes
+## Portal Compatibility
 
-- Mifare Classic UIDs cannot be changed on most tags. The app writes data blocks but the tag's UID must match or you need UID-changeable tags.
-- Authentication is required before writing. The app tries common default keys.
-- Sector trailer blocks (containing keys) are skipped during writing to preserve tag security.
+**IMPORTANT**: This app writes ALL blocks including sector trailers to ensure compatibility with Skylanders portal devices. The portal requires:
+- Complete block data including sector trailers with correct authentication keys
+- Proper authentication using keys extracted from the source data
+- All 64 blocks written (except Block 0 UID which may be locked on some tags)
+
+The app:
+- ✅ Extracts authentication keys from sector trailers in the source data
+- ✅ Writes ALL blocks including sector trailers (required for portal recognition)
+- ✅ Uses extracted keys for authentication before writing each sector
+- ✅ Handles Block 0 UID gracefully (attempts to write but continues if locked)
+
+**Testing with Portal**: To verify compatibility:
+1. Write a character to a blank Mifare Classic 1K tag using this app
+2. Place the tag on a Skylanders portal
+3. The portal should recognize the character and load it into the game
+
+**Note**: The tag's UID (Block 0) cannot be changed on most standard tags. For full compatibility, you may need:
+- UID-changeable tags (genuine Skylanders tags have specific UIDs)
+- OR use tags that already have compatible UIDs
+- The character data in blocks 1-63 is what the portal primarily reads for character identification
 
 ## Testing
 

@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
             .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
         navController = navHostFragment?.navController ?: return
         
+        // Hide action bar - we use custom header instead
+        supportActionBar?.hide()
+        
         // Set up top-level destinations (no back button on these)
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.characterListFragment)

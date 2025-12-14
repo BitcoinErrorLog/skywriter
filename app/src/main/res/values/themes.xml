@@ -16,6 +16,9 @@
         <item name="colorOnSurfaceVariant">#666666</item>
         <item name="colorPrimaryContainer">#E8F0F8</item>
         <item name="colorOnPrimaryContainer">@color/navy_blue</item>
+        <!-- Hide action bar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>
 

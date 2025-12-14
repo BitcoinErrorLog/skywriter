@@ -18,24 +18,25 @@
             android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:padding="8dp">
 
                 <ImageView
                     android:id="@+id/header_logo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_margin="8dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/header_logo"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <ImageButton
                     android:id="@+id/menu_button"
@@ -45,8 +46,11 @@
                     android:contentDescription="@string/app_name"
                     android:src="@android:drawable/ic_menu_more"
                     app:tint="@color/navy_blue"
-                    android:padding="12dp" />
-            </LinearLayout>
+                    android:padding="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView

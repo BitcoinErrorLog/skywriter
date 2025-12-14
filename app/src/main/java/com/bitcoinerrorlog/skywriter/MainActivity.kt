@@ -11,7 +11,7 @@ import com.bitcoinerrorlog.skywriter.nfc.NFCManager
 class MainActivity : AppCompatActivity() {
     
     private lateinit var nfcManager: NFCManager
-    private lateinit var navController: androidx.navigation.NavController
+    private var navController: androidx.navigation.NavController? = null
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,27 +19,37 @@ class MainActivity : AppCompatActivity() {
         
         nfcManager = NFCManager(this)
         
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        val controller = navHostFragment?.navController
-        if (controller == null) {
-            // Log error and return early if navigation fails
-            android.util.Log.e("MainActivity", "Failed to get NavController")
-            return
-        }
-        navController = controller
-        
         // Hide action bar - we use custom header instead
         supportActionBar?.hide()
+        
+        // Setup menu button in header (do this early, before navigation)
+        setupMenuButton()
+        
+        // Wait for NavHostFragment to be ready - FragmentContainerView creates it synchronously
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        
+        if (navHostFragment == null) {
+            android.util.Log.e("MainActivity", "NavHostFragment not found - this should not happen")
+            // Don't return early - let the activity continue, navigation just won't work
+            return
+        }
+        
+        // Get NavController - it should be available after fragment is attached
+        try {
+            navController = navHostFragment.navController
+        } catch (e: Exception) {
+            android.util.Log.e("MainActivity", "Failed to get NavController: ${e.message}", e)
+            return
+        }
         
         // Set up top-level destinations (no back button on these)
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.characterListFragment)
         )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        
-        // Setup menu button in header
-        setupMenuButton()
+        navController?.let { controller ->
+            setupActionBarWithNavController(controller, appBarConfiguration)
+        }
         
         // Handle initial intent if app was launched with NFC intent
         handleIntent(intent)
@@ -65,13 +75,13 @@ class MainActivity : AppCompatActivity() {
                                 fragment.toggleSearch()
                             } else {
                                 // If not on character list, navigate there first
-                                navController.navigate(R.id.characterListFragment)
+                                navController?.navigate(R.id.characterListFragment)
                             }
                         }
                         true
                     }
                     R.id.action_check_tag -> {
-                        navController.navigate(R.id.tagCheckFragment)
+                        navController?.navigate(R.id.tagCheckFragment)
                         true
                     }
                     else -> false
@@ -82,7 +92,7 @@ class MainActivity : AppCompatActivity() {
     }
     
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return navController?.navigateUp() ?: super.onSupportNavigateUp()
     }
     
     private fun handleIntent(intent: Intent?) {

@@ -21,7 +21,13 @@ class MainActivity : AppCompatActivity() {
         
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        navController = navHostFragment?.navController ?: return
+        val controller = navHostFragment?.navController
+        if (controller == null) {
+            // Log error and return early if navigation fails
+            android.util.Log.e("MainActivity", "Failed to get NavController")
+            return
+        }
+        navController = controller
         
         // Hide action bar - we use custom header instead
         supportActionBar?.hide()
@@ -40,7 +46,12 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun setupMenuButton() {
-        findViewById<android.widget.ImageButton>(R.id.menu_button)?.setOnClickListener { view ->
+        val menuButton = findViewById<android.widget.ImageButton>(R.id.menu_button)
+        if (menuButton == null) {
+            android.util.Log.w("MainActivity", "Menu button not found")
+            return
+        }
+        menuButton.setOnClickListener { view ->
             val popup = android.widget.PopupMenu(this, view)
             popup.menuInflater.inflate(R.menu.main_menu, popup.menu)
             popup.setOnMenuItemClickListener { item ->

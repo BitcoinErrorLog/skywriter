@@ -64,17 +64,28 @@ class MainActivity : AppCompatActivity() {
             navController = navHostFragment.navController
             android.util.Log.d("MainActivity", "NavController obtained: ${navController != null}")
             
-            // Set up top-level destinations (no back button on these)
-            navController?.let { controller ->
-                val appBarConfiguration = AppBarConfiguration(
-                    setOf(R.id.characterListFragment)
-                )
-                setupActionBarWithNavController(controller, appBarConfiguration)
-                android.util.Log.d("MainActivity", "Navigation setup complete")
-            } ?: android.util.Log.e("MainActivity", "NavController is null after setup")
+            // Note: We don't use setupActionBarWithNavController because we hide the action bar
+            // Navigation will work without it
+            android.util.Log.d("MainActivity", "Navigation setup complete")
         } catch (e: Exception) {
             android.util.Log.e("MainActivity", "Error in setupNavigation", e)
         }
+    }
+    
+    /**
+     * Gets the NavController, ensuring it's initialized.
+     * This is safe to call from menu handlers.
+     */
+    private fun getNavController(): androidx.navigation.NavController? {
+        if (navController != null) {
+            return navController
+        }
+        
+        // Try to get it fresh
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        navController = navHostFragment?.navController
+        return navController
     }
     
     private fun setupMenuButton() {
@@ -96,11 +107,11 @@ class MainActivity : AppCompatActivity() {
                             navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
                                 if (fragment is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment) {
                                     fragment.toggleSearch()
-                                } else {
-                                    // If not on character list, navigate there first
-                                    val controller = navController ?: navHostFragment?.navController
-                                    controller?.navigate(R.id.characterListFragment)
-                                }
+                            } else {
+                                // If not on character list, navigate there first
+                                val controller = getNavController()
+                                controller?.navigate(R.id.characterListFragment)
+                            }
                             }
                         } catch (e: Exception) {
                             android.util.Log.e("MainActivity", "Error with search", e)
@@ -109,14 +120,11 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.action_check_tag -> {
                         try {
-                            // Ensure navController is available
-                            val controller = navController ?: run {
-                                val navHostFragment = supportFragmentManager
-                                    .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-                                navHostFragment?.navController
-                            }
-                            
-                            controller?.navigate(R.id.tagCheckFragment) ?: run {
+                            val controller = getNavController()
+                            if (controller != null) {
+                                android.util.Log.d("MainActivity", "Navigating to tag checker")
+                                controller.navigate(R.id.tagCheckFragment)
+                            } else {
                                 android.util.Log.e("MainActivity", "Cannot navigate - NavController is null")
                                 android.widget.Toast.makeText(
                                     this,

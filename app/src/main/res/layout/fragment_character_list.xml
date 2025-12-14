@@ -9,13 +9,13 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:theme="@style/ThemeOverlay.AppCompat.Light">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="?attr/colorPrimary"
+            android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title="@string/characters"
-                app:titleTextColor="?attr/colorOnPrimary" />
+                app:titleTextColor="@color/navy_blue" />
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
@@ -44,7 +44,7 @@
             android:layout_margin="8dp"
             android:visibility="gone"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <com.google.android.material.textfield.TextInputLayout

@@ -157,13 +157,15 @@ class CharacterAdapter(
             binding.root.setOnClickListener {
                 onHeaderClick(adapterPosition)
             }
-            // Update expand icon
+            // Update expand icon (up arrow when expanded to collapse, down arrow when collapsed to expand)
             val iconRes = if (header.isExpanded) {
-                android.R.drawable.arrow_down_float
-            } else {
                 android.R.drawable.arrow_up_float
+            } else {
+                android.R.drawable.arrow_down_float
             }
             binding.expandIcon.setImageResource(iconRes)
+            // Ensure icon is white (tint is set in XML, but ensure it's applied)
+            binding.expandIcon.setColorFilter(android.graphics.Color.WHITE)
         }
     }
     

@@ -89,21 +89,49 @@ class MainActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_search -> {
-                        // Find CharacterListFragment and trigger search
-                        val navHostFragment = supportFragmentManager
-                            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-                        navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
-                            if (fragment is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment) {
-                                fragment.toggleSearch()
-                            } else {
-                                // If not on character list, navigate there first
-                                navController?.navigate(R.id.characterListFragment)
+                        try {
+                            // Find CharacterListFragment and trigger search
+                            val navHostFragment = supportFragmentManager
+                                .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                            navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
+                                if (fragment is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment) {
+                                    fragment.toggleSearch()
+                                } else {
+                                    // If not on character list, navigate there first
+                                    val controller = navController ?: navHostFragment?.navController
+                                    controller?.navigate(R.id.characterListFragment)
+                                }
                             }
+                        } catch (e: Exception) {
+                            android.util.Log.e("MainActivity", "Error with search", e)
                         }
                         true
                     }
                     R.id.action_check_tag -> {
-                        navController?.navigate(R.id.tagCheckFragment)
+                        try {
+                            // Ensure navController is available
+                            val controller = navController ?: run {
+                                val navHostFragment = supportFragmentManager
+                                    .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                                navHostFragment?.navController
+                            }
+                            
+                            controller?.navigate(R.id.tagCheckFragment) ?: run {
+                                android.util.Log.e("MainActivity", "Cannot navigate - NavController is null")
+                                android.widget.Toast.makeText(
+                                    this,
+                                    "Navigation not ready. Please try again.",
+                                    android.widget.Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("MainActivity", "Error navigating to tag checker", e)
+                            android.widget.Toast.makeText(
+                                this,
+                                "Error: ${e.message}",
+                                android.widget.Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         true
                     }
                     else -> false

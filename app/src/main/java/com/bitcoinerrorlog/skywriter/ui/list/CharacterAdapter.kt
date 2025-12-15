@@ -39,8 +39,14 @@ class CharacterAdapter(
         
         charactersByGame.forEach { (gameTitle, characters) ->
             // Find existing header state or default to collapsed
+            // BUT: Search results should always be expanded
+            val isSearchResult = gameTitle.startsWith("Search Results")
             val existingHeader = items.find { it is ListItem.Header && it.gameTitle == gameTitle } as? ListItem.Header
-            val isExpanded = existingHeader?.isExpanded ?: false
+            val isExpanded = if (isSearchResult) {
+                true // Always expand search results
+            } else {
+                existingHeader?.isExpanded ?: false
+            }
             
             newItems.add(ListItem.Header(gameTitle, isExpanded))
             if (isExpanded) {

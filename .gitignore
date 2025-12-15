@@ -98,3 +98,4 @@ lint/tmp/
 
 # APK outputs (keep structure but ignore built APKs)
 app/build/outputs/apk/
+archive/

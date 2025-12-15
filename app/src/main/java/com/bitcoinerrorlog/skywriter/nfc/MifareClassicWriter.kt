@@ -41,10 +41,33 @@ class MifareClassicWriter {
         val mifare = MifareClassic.get(tag) ?: return@withContext WriteResult.TagNotSupported
         
         try {
-            mifare.connect()
+            // Close any existing connection first to ensure fresh connection
+            try {
+                if (mifare.isConnected) {
+                    mifare.close()
+                }
+            } catch (e: Exception) {
+                // Ignore - connection might not be open
+            }
+            
+            // Try to connect - this may fail if tag is out of range or invalid
+            try {
+                mifare.connect()
+            } catch (e: java.io.IOException) {
+                Log.e(TAG, "Failed to connect to tag: ${e.message}")
+                return@withContext WriteResult.Error("Tag connection failed. Please keep the tag close and try again.")
+            }
             
             if (!mifare.isConnected) {
-                return@withContext WriteResult.WriteFailed
+                return@withContext WriteResult.Error("Tag is not connected. Please keep the tag close and try again.")
+            }
+            
+            // Verify connection is still alive by reading block 0
+            try {
+                mifare.readBlock(0)
+            } catch (e: Exception) {
+                Log.e(TAG, "Tag connection test failed: ${e.message}")
+                return@withContext WriteResult.Error("Tag connection lost. Please keep the tag close and try again.")
             }
             
             val type = mifare.type
@@ -59,6 +82,9 @@ class MifareClassicWriter {
             val sectorKeys = extractKeysFromSectorTrailers(blocks)
             Log.d(TAG, "Extracted keys for ${sectorKeys.size} sectors")
             
+            // Track which sectors we've authenticated to avoid re-authenticating
+            val authenticatedSectors = mutableSetOf<Int>()
+            
             // Write each block (including sector trailers)
             for ((index, blockData) in blocks.withIndex()) {
                 if (index >= mifare.blockCount) {
@@ -67,38 +93,113 @@ class MifareClassicWriter {
                 
                 val sector = mifare.blockToSector(index)
                 
-                // Authenticate for the sector
-                val authKey = sectorKeys[sector] ?: getDefaultKeyForSector(sector)
-                if (!authenticateSector(mifare, sector, authKey)) {
-                    Log.w(TAG, "Failed to authenticate sector $sector, trying default keys...")
-                    // Try default keys as fallback
-                    if (!authenticateSectorWithDefaults(mifare, sector)) {
-                        return@withContext WriteResult.AuthenticationFailed
+                // Authenticate for the sector only if we haven't already
+                var authenticated = authenticatedSectors.contains(sector)
+                if (!authenticated) {
+                    // Try extracted keys first, then default keys
+                    val authKey = sectorKeys[sector]
+                    if (authKey != null) {
+                        authenticated = authenticateSector(mifare, sector, authKey)
+                    }
+                    
+                    if (!authenticated) {
+                        Log.w(TAG, "Failed to authenticate sector $sector with extracted key, trying default keys...")
+                        // Try default keys as fallback - this allows overwriting tags with custom keys
+                        authenticated = authenticateSectorWithDefaults(mifare, sector)
+                    }
+                    
+                    if (authenticated) {
+                        authenticatedSectors.add(sector)
+                        Log.d(TAG, "Authenticated sector $sector")
+                    } else {
+                        Log.w(TAG, "Cannot authenticate sector $sector, but continuing to try writing...")
+                        // Don't fail immediately - try to write anyway, some tags may allow it
                     }
                 }
                 
                 // Write the block
+                // Block 0 contains UID which is typically locked, but we try anyway
+                if (index == 0) {
+                    try {
+                        mifare.writeBlock(index, blockData)
+                        Log.d(TAG, "Successfully wrote Block 0")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Block 0 write failed (UID may be locked): ${e.message}")
+                        // Continue - UID lock is expected on many tags
+                    }
+                    continue // Move to next block
+                }
+                
+                // For all other blocks, ensure connection and authentication
+                // Check connection before each write
+                if (!mifare.isConnected) {
+                    Log.w(TAG, "Connection lost, attempting reconnect for block $index")
+                    try {
+                        mifare.close()
+                        mifare.connect()
+                        // Re-authenticate if needed
+                        if (!authenticatedSectors.contains(sector)) {
+                            if (!authenticateSectorWithDefaults(mifare, sector)) {
+                                return@withContext WriteResult.Error("Cannot authenticate sector $sector. Tag may be locked or use custom keys.")
+                            }
+                            authenticatedSectors.add(sector)
+                        }
+                    } catch (e: Exception) {
+                        return@withContext WriteResult.Error("Tag connection lost at block $index. Please keep the tag close and try again.")
+                    }
+                }
+                
+                // Ensure we're authenticated for this sector
+                if (!authenticatedSectors.contains(sector)) {
+                    if (!authenticateSectorWithDefaults(mifare, sector)) {
+                        return@withContext WriteResult.Error("Cannot authenticate sector $sector for block $index. Tag may be locked.")
+                    }
+                    authenticatedSectors.add(sector)
+                }
+                
+                // Attempt to write the block
                 try {
-                    // Block 0 contains UID which is typically locked, but we try anyway
-                    // The tag will reject it if locked, which is fine
-                    if (index == 0) {
+                    mifare.writeBlock(index, blockData)
+                    Log.d(TAG, "Successfully wrote block $index")
+                } catch (e: java.io.IOException) {
+                    // Connection error - try to reconnect once
+                    Log.w(TAG, "IO error writing block $index, attempting reconnect: ${e.message}")
+                    val errorMsg = e.message?.lowercase() ?: ""
+                    if (errorMsg.contains("out of date") || errorMsg.contains("tag is out of date") || 
+                        errorMsg.contains("connection") || errorMsg.contains("ioexception")) {
                         try {
-                            mifare.writeBlock(index, blockData)
-                            Log.d(TAG, "Successfully wrote Block 0")
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Block 0 write failed (UID may be locked): ${e.message}")
-                            // Continue - UID lock is expected on many tags
+                            if (!mifare.isConnected) {
+                                mifare.connect()
+                                // Re-authenticate
+                                if (!authenticatedSectors.contains(sector)) {
+                                    if (!authenticateSectorWithDefaults(mifare, sector)) {
+                                        return@withContext WriteResult.Error("Cannot authenticate sector $sector after reconnect. Please keep the tag close and try again.")
+                                    }
+                                    authenticatedSectors.add(sector)
+                                }
+                                mifare.writeBlock(index, blockData)
+                                Log.d(TAG, "Successfully wrote block $index after reconnect")
+                            } else {
+                                return@withContext WriteResult.Error("Tag connection lost. Please keep the tag close and try again.")
+                            }
+                        } catch (e2: Exception) {
+                            return@withContext WriteResult.Error("Tag connection lost. Please keep the tag close and try again.")
                         }
                     } else {
-                        mifare.writeBlock(index, blockData)
+                        // Non-connection IO error - could be write-protected
+                        if (isSectorTrailer(index)) {
+                            Log.w(TAG, "Sector trailer write failed for block $index: ${e.message}")
+                            // Continue - sector trailer might be locked but data blocks should work
+                        } else {
+                            return@withContext WriteResult.Error("Failed to write block $index: ${e.message}. Tag may be write-protected.")
+                        }
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    // General exception - could be authentication or write-protection
                     Log.e(TAG, "Failed to write block $index: ${e.message}")
-                    // For sector trailers, this might fail if keys don't match
-                    // But we continue to try writing other blocks
                     if (isSectorTrailer(index)) {
                         Log.w(TAG, "Sector trailer write failed for block $index, continuing...")
+                        // Continue - sector trailer might be locked
                     } else {
                         return@withContext WriteResult.Error("Failed to write block $index: ${e.message}")
                     }
@@ -106,8 +207,18 @@ class MifareClassicWriter {
             }
             
             WriteResult.Success
+        } catch (e: java.io.IOException) {
+            e.printStackTrace()
+            Log.e(TAG, "IO error during write: ${e.message}")
+            val errorMsg = e.message?.lowercase() ?: ""
+            if (errorMsg.contains("out of date") || errorMsg.contains("tag is out of date")) {
+                return@withContext WriteResult.Error("Tag connection lost. Please keep the tag close and try again.")
+            } else {
+                return@withContext WriteResult.Error("Tag connection failed. Please keep the tag close and try again.")
+            }
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e(TAG, "Error during write: ${e.message}")
             WriteResult.Error(e.message ?: "Unknown error")
         } finally {
             try {

@@ -237,6 +237,7 @@ class TagCompatibilityChecker {
             mifare.close()
             
             // Determine overall compatibility result
+            // Allow writing even if authentication fails (tag may have custom keys or be partially written)
             val result = when {
                 !isClassic || !is1K -> {
                     CompatibilityResult.Incompatible(
@@ -244,16 +245,23 @@ class TagCompatibilityChecker {
                         details = issues
                     )
                 }
-                !authenticationTest -> {
-                    CompatibilityResult.Incompatible(
-                        reason = "Cannot authenticate with tag",
-                        details = issues
-                    )
-                }
-                !writable -> {
+                !writable && authenticationTest -> {
+                    // Only mark as incompatible if we can authenticate but can't write
                     CompatibilityResult.Incompatible(
                         reason = "Tag is not writable",
                         details = issues
+                    )
+                }
+                !authenticationTest -> {
+                    // If we can't authenticate, it might be a partially written tag or custom keys
+                    // Allow writing anyway - the writer will try to overwrite
+                    CompatibilityResult.Warning(
+                        message = "Tag may have custom keys or partial data",
+                        details = listOf(
+                            "Cannot authenticate with default keys",
+                            "Tag can still be overwritten",
+                            "Writing will replace all data on the tag"
+                        ) + issues
                     )
                 }
                 uidChangeable == false -> {

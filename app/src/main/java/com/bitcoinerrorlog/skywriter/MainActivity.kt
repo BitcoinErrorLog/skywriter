@@ -37,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         // Setup menu button in header
         setupMenuButton()
         
+        // Setup logo click to navigate home
+        setupLogoClick()
+        
         // Get NavHostFragment - use post to ensure view is ready
         val containerView = findViewById<androidx.fragment.app.FragmentContainerView>(R.id.nav_host_fragment)
         if (containerView != null) {
@@ -97,24 +100,74 @@ class MainActivity : AppCompatActivity() {
         menuButton.setOnClickListener { view ->
             val popup = android.widget.PopupMenu(this, view)
             popup.menuInflater.inflate(R.menu.main_menu, popup.menu)
+            
+            // Show/hide menu items based on current fragment
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+            val currentFragment = navHostFragment?.childFragmentManager?.fragments?.firstOrNull()
+            
+            when (currentFragment) {
+                is com.bitcoinerrorlog.skywriter.ui.home.HomeFragment -> {
+                    // On home screen, hide search and back to home
+                    popup.menu.findItem(R.id.action_search)?.isVisible = false
+                    popup.menu.findItem(R.id.action_search_amiibo)?.isVisible = false
+                    popup.menu.findItem(R.id.action_back_to_home)?.isVisible = false
+                }
+                is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment -> {
+                    // On Skylanders list, show Skylanders search, hide Amiibo search
+                    popup.menu.findItem(R.id.action_search)?.isVisible = true
+                    popup.menu.findItem(R.id.action_search_amiibo)?.isVisible = false
+                    popup.menu.findItem(R.id.action_back_to_home)?.isVisible = true
+                }
+                is com.bitcoinerrorlog.skywriter.ui.amiibo.AmiiboListFragment -> {
+                    // On Amiibo list, show Amiibo search, hide Skylanders search
+                    popup.menu.findItem(R.id.action_search)?.isVisible = false
+                    popup.menu.findItem(R.id.action_search_amiibo)?.isVisible = true
+                    popup.menu.findItem(R.id.action_back_to_home)?.isVisible = true
+                }
+                else -> {
+                    // On other screens, show back to home
+                    popup.menu.findItem(R.id.action_search)?.isVisible = false
+                    popup.menu.findItem(R.id.action_search_amiibo)?.isVisible = false
+                    popup.menu.findItem(R.id.action_back_to_home)?.isVisible = true
+                }
+            }
+            
             popup.setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.action_search -> {
                         try {
-                            // Find CharacterListFragment and trigger search
                             val navHostFragment = supportFragmentManager
                                 .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
                             navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
                                 if (fragment is com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment) {
                                     fragment.toggleSearch()
-                            } else {
-                                // If not on character list, navigate there first
-                                val controller = getNavController()
-                                controller?.navigate(R.id.characterListFragment)
-                            }
+                                } else {
+                                    // If not on character list, navigate there first
+                                    val controller = getNavController()
+                                    controller?.navigate(R.id.characterListFragment)
+                                }
                             }
                         } catch (e: Exception) {
                             android.util.Log.e("MainActivity", "Error with search", e)
+                        }
+                        true
+                    }
+                    R.id.action_search_amiibo -> {
+                        try {
+                            val navHostFragment = supportFragmentManager
+                                .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+                            navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
+                                if (fragment is com.bitcoinerrorlog.skywriter.ui.amiibo.AmiiboListFragment) {
+                                    fragment.toggleSearch()
+                                } else {
+                                    // If not on Amiibo list, navigate there first
+                                    val controller = getNavController()
+                                    controller?.navigate(R.id.amiiboListFragment)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            android.util.Log.e("MainActivity", "Error with Amiibo search", e)
                         }
                         true
                     }
@@ -142,10 +195,43 @@ class MainActivity : AppCompatActivity() {
                         }
                         true
                     }
+                    R.id.action_back_to_home -> {
+                        try {
+                            val controller = getNavController()
+                            controller?.navigate(R.id.homeFragment)
+                        } catch (e: Exception) {
+                            android.util.Log.e("MainActivity", "Error navigating to home", e)
+                        }
+                        true
+                    }
                     else -> false
                 }
             }
             popup.show()
+        }
+    }
+    
+    private fun setupLogoClick() {
+        val logo = findViewById<android.widget.ImageView>(R.id.header_logo)
+        if (logo == null) {
+            android.util.Log.w("MainActivity", "Header logo not found")
+            return
+        }
+        logo.setOnClickListener {
+            try {
+                val controller = getNavController()
+                if (controller != null) {
+                    // Navigate to home, clearing the back stack
+                    val navOptions = androidx.navigation.NavOptions.Builder()
+                        .setPopUpTo(R.id.homeFragment, true)
+                        .build()
+                    controller.navigate(R.id.homeFragment, null, navOptions)
+                } else {
+                    android.util.Log.e("MainActivity", "Cannot navigate to home - NavController is null")
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("MainActivity", "Error navigating to home", e)
+            }
         }
     }
     

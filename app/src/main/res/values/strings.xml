@@ -32,5 +32,20 @@
     <string name="write_anyway">Write Anyway</string>
     <string name="check_tag">Check Tag</string>
     <string name="tap_check_button">Tap the Check Tag button below, then tap your NFC tag</string>
+    <string name="select_mode">Select Mode</string>
+    <string name="skylanders">Skylanders</string>
+    <string name="skylanders_description">Write Skylanders characters to NFC tags</string>
+    <string name="amiibo">Amiibo</string>
+    <string name="amiibo_description">Write Amiibo characters to NFC tags</string>
+    <string name="amiibo_list">Amiibo</string>
+    <string name="write_amiibo">Write Amiibo</string>
+    <string name="amiibo_search">Search Amiibo…</string>
+    <string name="no_amiibo_found">No Amiibo found</string>
+    <string name="amiibo_details">Amiibo Details</string>
+    <string name="select_amiibo">Select an Amiibo</string>
+    <string name="tag_not_supported_amiibo">Tag is not supported. Please use an NTAG215 tag.</string>
+    <string name="back_to_home">Back to Home</string>
+    <string name="keep_tag_close_and_tap_again">Keep the tag close to your device and tap it again to write</string>
+    <string name="keep_tag_close_during_write">Keep the tag close to your device while writing…</string>
 </resources>
 

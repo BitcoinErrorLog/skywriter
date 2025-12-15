@@ -2,12 +2,30 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/characterListFragment">
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.bitcoinerrorlog.skywriter.ui.home.HomeFragment"
+        android:label="@string/app_name">
+        <action
+            android:id="@+id/action_homeFragment_to_characterListFragment"
+            app:destination="@id/characterListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_amiiboListFragment"
+            app:destination="@id/amiiboListFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/characterListFragment"
         android:name="com.bitcoinerrorlog.skywriter.ui.list.CharacterListFragment"
-        android:label="@string/characters" />
+        android:label="@string/characters">
+        <action
+            android:id="@+id/action_characterListFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/writeNFCFragment"
@@ -18,5 +36,21 @@
         android:id="@+id/tagCheckFragment"
         android:name="com.bitcoinerrorlog.skywriter.ui.check.TagCheckFragment"
         android:label="@string/check_tag_compatibility" />
+
+    <fragment
+        android:id="@+id/amiiboListFragment"
+        android:name="com.bitcoinerrorlog.skywriter.ui.amiibo.AmiiboListFragment"
+        android:label="@string/amiibo_list">
+        <action
+            android:id="@+id/action_amiiboListFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/writeAmiiboFragment"
+        android:name="com.bitcoinerrorlog.skywriter.ui.amiibo.WriteAmiiboFragment"
+        android:label="@string/write_amiibo" />
 
 </navigation>

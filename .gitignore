@@ -22,6 +22,8 @@
 *.aar
 *.ap_
 *.apk
+# Exception: Keep skywriter.apk in root for easy access
+!skywriter.apk
 *.class
 *.dex
 *.iml

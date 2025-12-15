@@ -51,6 +51,43 @@ android {
     }
 }
 
+// Task to copy APK to root directory
+tasks.register("copyApkToRoot") {
+    doLast {
+        val buildDir = layout.buildDirectory.get().asFile
+        val debugApk = file("$buildDir/outputs/apk/debug/skywriter.apk")
+        val releaseApk = file("$buildDir/outputs/apk/release/skywriter.apk")
+        
+        // Prefer release, fall back to debug
+        val sourceApk = when {
+            releaseApk.exists() -> releaseApk
+            debugApk.exists() -> debugApk
+            else -> null
+        }
+        
+        if (sourceApk != null && sourceApk.exists()) {
+            copy {
+                from(sourceApk)
+                into(project.rootDir)
+                rename { "skywriter.apk" }
+            }
+            println("✅ Copied ${sourceApk.name} to root directory")
+        } else {
+            println("⚠️  No APK found to copy. Build the project first.")
+        }
+    }
+}
+
+// Automatically copy APK after assemble tasks
+afterEvaluate {
+    tasks.named("assembleDebug") {
+        finalizedBy("copyApkToRoot")
+    }
+    tasks.named("assembleRelease") {
+        finalizedBy("copyApkToRoot")
+    }
+}
+
 dependencies {
     // AndroidX Core
     implementation("androidx.core:core-ktx:1.12.0")

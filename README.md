@@ -287,11 +287,14 @@ See [TESTING_NFC.md](TESTING_NFC.md) and [RUN_TESTS.md](RUN_TESTS.md) for detail
 ### Building the Project
 
 ```bash
-# Build debug APK
+# Build debug APK (automatically copies to root as skywriter.apk)
 ./gradlew assembleDebug
 
-# Build release APK (requires signing config)
+# Build release APK (automatically copies to root as skywriter.apk)
 ./gradlew assembleRelease
+
+# Manually copy APK to root (if needed)
+./gradlew copyApkToRoot
 
 # Run lint checks
 ./gradlew lint
@@ -299,6 +302,8 @@ See [TESTING_NFC.md](TESTING_NFC.md) and [RUN_TESTS.md](RUN_TESTS.md) for detail
 # Clean build
 ./gradlew clean
 ```
+
+**Note**: The APK is automatically copied to the root directory (`skywriter.apk`) after each build. This makes it easy to find and share the latest build.
 
 ### Project Structure
 

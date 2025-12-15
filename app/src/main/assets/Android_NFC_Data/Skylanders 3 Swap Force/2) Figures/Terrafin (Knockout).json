@@ -73,6 +73,14 @@
     "original_filename": "Terrafin (Knockout).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Terrafin (Knockout).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Earth",
+    "biography": "A shark who burrows through earth. Terrafin combines aquatic power with earth manipulation.",
+    "abilities": [
+      "Earth Burrow",
+      "Shark Strike",
+      "Ground Slam"
+    ],
+    "character_type": "Core"
   }
 }

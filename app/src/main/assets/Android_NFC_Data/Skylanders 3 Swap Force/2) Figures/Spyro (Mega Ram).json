@@ -73,6 +73,14 @@
     "original_filename": "Spyro (Mega Ram).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Spyro (Mega Ram).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Magic",
+    "biography": "A brave purple dragon who protects the Skylands with his fire breath and determination. Spyro is the legendary hero of the Skylands.",
+    "abilities": [
+      "Fire Breath",
+      "Charge Attack",
+      "Dragon Flight"
+    ],
+    "character_type": "Core"
   }
 }

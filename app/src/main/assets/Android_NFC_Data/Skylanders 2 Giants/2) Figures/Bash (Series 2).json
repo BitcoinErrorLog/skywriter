@@ -73,6 +73,14 @@
     "original_filename": "Bash (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Bash (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Earth",
+    "biography": "A powerful triceratops who uses his massive horns and tail to crush enemies. Bash is known for his strength and durability.",
+    "abilities": [
+      "Horn Charge",
+      "Tail Swipe",
+      "Earthquake"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Crypt Crusher.nfc",
     "original_path": "Skylanders 5 Superchargers/2) Vehicles/Crypt Crusher.nfc",
     "category": "Skylanders 5 Superchargers",
-    "subcategory": "2) Vehicles"
+    "subcategory": "2) Vehicles",
+    "element": "Earth",
+    "biography": "A giant golem made of stone. Crusher crushes everything in his path with earth-shattering power.",
+    "abilities": [
+      "Stone Slam",
+      "Earthquake",
+      "Giant Strike"
+    ],
+    "character_type": "Giant"
   }
 }

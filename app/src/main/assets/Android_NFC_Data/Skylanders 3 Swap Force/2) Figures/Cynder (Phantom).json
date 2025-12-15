@@ -73,6 +73,14 @@
     "original_filename": "Cynder (Phantom).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Cynder (Phantom).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Undead",
+    "biography": "A dark dragon who was once evil but now fights for good. Cynder uses shadow and darkness as her weapons.",
+    "abilities": [
+      "Shadow Breath",
+      "Dark Flight",
+      "Shadow Strike"
+    ],
+    "character_type": "Core"
   }
 }

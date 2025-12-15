@@ -73,6 +73,14 @@
     "original_filename": "Prism Break (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Prism Break (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Earth",
+    "biography": "A crystal warrior who uses light and earth. Prism Break refracts light through crystals to create powerful attacks.",
+    "abilities": [
+      "Crystal Blast",
+      "Light Refraction",
+      "Earth Crystal"
+    ],
+    "character_type": "Core"
   }
 }

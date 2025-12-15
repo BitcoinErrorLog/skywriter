@@ -73,6 +73,14 @@
     "original_filename": "Lightning Rod (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Lightning Rod (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Air",
+    "biography": "A lightning-powered warrior who controls storms. Lightning Rod harnesses the power of thunder and lightning.",
+    "abilities": [
+      "Lightning Strike",
+      "Thunder Blast",
+      "Storm Control"
+    ],
+    "character_type": "Core"
   }
 }

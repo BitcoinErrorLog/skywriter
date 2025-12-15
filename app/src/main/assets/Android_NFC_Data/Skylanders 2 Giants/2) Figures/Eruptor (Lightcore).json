@@ -73,6 +73,14 @@
     "original_filename": "Eruptor (Lightcore).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Eruptor (Lightcore).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Fire",
+    "biography": "A living volcano who spews lava and fire. Eruptor's explosive temper matches his explosive power.",
+    "abilities": [
+      "Lava Blast",
+      "Fire Eruption",
+      "Magma Strike"
+    ],
+    "character_type": "Core"
   }
 }

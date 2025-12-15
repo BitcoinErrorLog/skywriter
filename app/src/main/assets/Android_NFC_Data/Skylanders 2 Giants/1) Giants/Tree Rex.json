@@ -73,6 +73,14 @@
     "original_filename": "Tree Rex.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Tree Rex.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Life",
+    "biography": "A giant tree warrior who protects nature. Tree Rex combines plant magic with massive strength.",
+    "abilities": [
+      "Root Strike",
+      "Giant Slam",
+      "Nature's Wrath"
+    ],
+    "character_type": "Giant"
   }
 }

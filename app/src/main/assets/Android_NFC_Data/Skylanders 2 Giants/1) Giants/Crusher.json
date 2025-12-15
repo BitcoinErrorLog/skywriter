@@ -73,6 +73,14 @@
     "original_filename": "Crusher.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Crusher.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Earth",
+    "biography": "A giant golem made of stone. Crusher crushes everything in his path with earth-shattering power.",
+    "abilities": [
+      "Stone Slam",
+      "Earthquake",
+      "Giant Strike"
+    ],
+    "character_type": "Giant"
   }
 }

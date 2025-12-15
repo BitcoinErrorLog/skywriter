@@ -73,6 +73,14 @@
     "original_filename": "Warnado (Lightcore).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Warnado (Lightcore).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Air",
+    "biography": "A tornado warrior who controls wind. Warnado spins into battle with devastating force.",
+    "abilities": [
+      "Tornado Spin",
+      "Wind Blast",
+      "Air Strike"
+    ],
+    "character_type": "Core"
   }
 }

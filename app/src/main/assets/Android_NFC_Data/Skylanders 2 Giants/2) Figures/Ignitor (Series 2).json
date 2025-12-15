@@ -73,6 +73,14 @@
     "original_filename": "Ignitor (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Ignitor (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Fire",
+    "biography": "A fire knight who wields a flaming sword. Ignitor is a noble warrior who fights with honor and fire.",
+    "abilities": [
+      "Flaming Sword",
+      "Fire Charge",
+      "Knight's Valor"
+    ],
+    "character_type": "Core"
   }
 }

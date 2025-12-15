@@ -73,6 +73,14 @@
     "original_filename": "Gill Grunt (Eons Elite).nfc",
     "original_path": "Skylanders 4.5 Eon's Elite/1) Figures/Gill Grunt (Eons Elite).nfc",
     "category": "Skylanders 4.5 Eon's Elite",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Water",
+    "biography": "A fish soldier who fights with water cannons and harpoons. Gill Grunt is a master of aquatic combat.",
+    "abilities": [
+      "Water Cannon",
+      "Harpoon Shot",
+      "Aqua Blast"
+    ],
+    "character_type": "Core"
   }
 }

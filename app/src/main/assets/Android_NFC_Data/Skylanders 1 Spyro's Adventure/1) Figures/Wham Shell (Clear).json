@@ -73,6 +73,14 @@
     "original_filename": "Wham Shell (Clear).nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Wham Shell (Clear).nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Water",
+    "biography": "A shell warrior who fights with water and shells. Wham Shell uses his shell as both weapon and shield.",
+    "abilities": [
+      "Shell Strike",
+      "Water Blast",
+      "Shell Shield"
+    ],
+    "character_type": "Core"
   }
 }

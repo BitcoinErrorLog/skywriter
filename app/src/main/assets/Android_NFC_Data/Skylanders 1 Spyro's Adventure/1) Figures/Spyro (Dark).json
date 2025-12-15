@@ -73,6 +73,14 @@
     "original_filename": "Spyro (Dark).nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Spyro (Dark).nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Magic",
+    "biography": "A brave purple dragon who protects the Skylands with his fire breath and determination. Spyro is the legendary hero of the Skylands.",
+    "abilities": [
+      "Fire Breath",
+      "Charge Attack",
+      "Dragon Flight"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Zook (Eons Elite).nfc",
     "original_path": "Skylanders 4.5 Eon's Elite/1) Figures/Zook (Eons Elite).nfc",
     "category": "Skylanders 4.5 Eon's Elite",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Life",
+    "biography": "A musician who uses sound waves. Zook combines music magic with nature's power.",
+    "abilities": [
+      "Sound Blast",
+      "Music Magic",
+      "Nature's Song"
+    ],
+    "character_type": "Core"
   }
 }

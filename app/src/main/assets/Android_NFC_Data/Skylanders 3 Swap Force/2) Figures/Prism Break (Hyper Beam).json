@@ -73,6 +73,14 @@
     "original_filename": "Prism Break (Hyper Beam).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Prism Break (Hyper Beam).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Earth",
+    "biography": "A crystal warrior who uses light and earth. Prism Break refracts light through crystals to create powerful attacks.",
+    "abilities": [
+      "Crystal Blast",
+      "Light Refraction",
+      "Earth Crystal"
+    ],
+    "character_type": "Core"
   }
 }

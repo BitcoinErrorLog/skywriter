@@ -73,6 +73,14 @@
     "original_filename": "Stealth Elf (Dark Sure Shot).nfc",
     "original_path": "Skylanders 5 Superchargers/1) Figures/Stealth Elf (Dark Sure Shot).nfc",
     "category": "Skylanders 5 Superchargers",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Life",
+    "biography": "A ninja elf who moves in shadows. Stealth Elf is a master of stealth and precision strikes.",
+    "abilities": [
+      "Stealth Attack",
+      "Shadow Strike",
+      "Elf Precision"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Sonic Boom (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Sonic Boom (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Air",
+    "biography": "A bat who uses sonic waves to attack. Sonic Boom's powerful screech can shatter enemies.",
+    "abilities": [
+      "Sonic Screech",
+      "Air Blast",
+      "Wing Strike"
+    ],
+    "character_type": "Core"
   }
 }

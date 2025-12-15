@@ -73,6 +73,14 @@
     "original_filename": "Stealth Elf (Ninja).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Stealth Elf (Ninja).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Life",
+    "biography": "A ninja elf who moves in shadows. Stealth Elf is a master of stealth and precision strikes.",
+    "abilities": [
+      "Stealth Attack",
+      "Shadow Strike",
+      "Elf Precision"
+    ],
+    "character_type": "Core"
   }
 }

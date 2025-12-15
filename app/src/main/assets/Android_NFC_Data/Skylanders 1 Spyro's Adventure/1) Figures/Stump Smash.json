@@ -73,6 +73,14 @@
     "original_filename": "Stump Smash.nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Stump Smash.nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Life",
+    "biography": "A tree warrior who uses nature's power. Stump Smash combines plant magic with physical strength.",
+    "abilities": [
+      "Root Strike",
+      "Nature's Wrath",
+      "Tree Slam"
+    ],
+    "character_type": "Core"
   }
 }

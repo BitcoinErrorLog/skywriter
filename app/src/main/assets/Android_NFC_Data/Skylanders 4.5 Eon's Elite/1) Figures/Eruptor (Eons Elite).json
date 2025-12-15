@@ -73,6 +73,14 @@
     "original_filename": "Eruptor (Eons Elite).nfc",
     "original_path": "Skylanders 4.5 Eon's Elite/1) Figures/Eruptor (Eons Elite).nfc",
     "category": "Skylanders 4.5 Eon's Elite",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Fire",
+    "biography": "A living volcano who spews lava and fire. Eruptor's explosive temper matches his explosive power.",
+    "abilities": [
+      "Lava Blast",
+      "Fire Eruption",
+      "Magma Strike"
+    ],
+    "character_type": "Core"
   }
 }

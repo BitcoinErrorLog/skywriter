@@ -73,6 +73,14 @@
     "original_filename": "Thumpback.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Thumpback.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Water",
+    "biography": "A giant whale warrior who controls water. Thumpback uses massive size and aquatic power.",
+    "abilities": [
+      "Water Blast",
+      "Giant Slam",
+      "Whale Strike"
+    ],
+    "character_type": "Giant"
   }
 }

@@ -30,13 +30,21 @@ data class CharacterModel(
  * @param originalPath Path to the original file
  * @param category Game series/category (e.g., "Skylanders 1 Spyro's Adventure")
  * @param subcategory Subcategory within the game (e.g., "Figures", "Magic Items")
+ * @param element Character element (Fire, Water, Earth, Air, Life, Undead, Tech, Magic, Light, Dark)
+ * @param biography Character biography/description
+ * @param abilities List of character abilities/special moves
+ * @param characterType Type of character (Core, Giant, Swapper, Trap Master, Supercharger, Sensei, etc.)
  */
 @Parcelize
 data class CharacterMetadata(
     val originalFilename: String,
     val originalPath: String,
     val category: String?,
-    val subcategory: String?
+    val subcategory: String?,
+    val element: String? = null,
+    val biography: String? = null,
+    val abilities: List<String> = emptyList(),
+    val characterType: String? = null
 ) : Parcelable {
     /**
      * Display name derived from filename (without .nfc extension)
@@ -49,4 +57,22 @@ data class CharacterMetadata(
      */
     val gameSeries: String
         get() = category ?: "Unknown"
+    
+    /**
+     * Get element color for UI display
+     */
+    val elementColor: Int
+        get() = when (element?.lowercase()) {
+            "fire" -> android.graphics.Color.parseColor("#FF6B35")
+            "water" -> android.graphics.Color.parseColor("#4A90E2")
+            "earth" -> android.graphics.Color.parseColor("#8B4513")
+            "air" -> android.graphics.Color.parseColor("#87CEEB")
+            "life" -> android.graphics.Color.parseColor("#90EE90")
+            "undead" -> android.graphics.Color.parseColor("#9370DB")
+            "tech" -> android.graphics.Color.parseColor("#C0C0C0")
+            "magic" -> android.graphics.Color.parseColor("#FF69B4")
+            "light" -> android.graphics.Color.parseColor("#FFD700")
+            "dark" -> android.graphics.Color.parseColor("#2F2F2F")
+            else -> android.graphics.Color.parseColor("#808080")
+        }
 }

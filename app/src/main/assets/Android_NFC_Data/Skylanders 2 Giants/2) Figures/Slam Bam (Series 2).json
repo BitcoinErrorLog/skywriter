@@ -73,6 +73,14 @@
     "original_filename": "Slam Bam (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Slam Bam (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Water",
+    "biography": "A yeti who fights with ice and water. Slam Bam combines brute strength with elemental power.",
+    "abilities": [
+      "Ice Slam",
+      "Water Blast",
+      "Frost Strike"
+    ],
+    "character_type": "Core"
   }
 }

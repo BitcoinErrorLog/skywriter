@@ -73,6 +73,14 @@
     "original_filename": "Stump Smash (White Flocked).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Stump Smash (White Flocked).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Life",
+    "biography": "A tree warrior who uses nature's power. Stump Smash combines plant magic with physical strength.",
+    "abilities": [
+      "Root Strike",
+      "Nature's Wrath",
+      "Tree Slam"
+    ],
+    "character_type": "Core"
   }
 }

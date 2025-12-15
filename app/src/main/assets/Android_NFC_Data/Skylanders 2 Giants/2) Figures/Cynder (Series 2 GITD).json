@@ -73,6 +73,14 @@
     "original_filename": "Cynder (Series 2 GITD).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Cynder (Series 2 GITD).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Undead",
+    "biography": "A dark dragon who was once evil but now fights for good. Cynder uses shadow and darkness as her weapons.",
+    "abilities": [
+      "Shadow Breath",
+      "Dark Flight",
+      "Shadow Strike"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Wham Shell (Lightcore).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Wham Shell (Lightcore).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Water",
+    "biography": "A shell warrior who fights with water and shells. Wham Shell uses his shell as both weapon and shield.",
+    "abilities": [
+      "Shell Strike",
+      "Water Blast",
+      "Shell Shield"
+    ],
+    "character_type": "Core"
   }
 }

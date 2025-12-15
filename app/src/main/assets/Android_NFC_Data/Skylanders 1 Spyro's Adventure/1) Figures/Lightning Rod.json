@@ -73,6 +73,14 @@
     "original_filename": "Lightning Rod.nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Lightning Rod.nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Air",
+    "biography": "A lightning-powered warrior who controls storms. Lightning Rod harnesses the power of thunder and lightning.",
+    "abilities": [
+      "Lightning Strike",
+      "Thunder Blast",
+      "Storm Control"
+    ],
+    "character_type": "Core"
   }
 }

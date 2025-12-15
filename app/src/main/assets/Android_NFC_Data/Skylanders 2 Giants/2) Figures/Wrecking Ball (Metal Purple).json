@@ -73,6 +73,14 @@
     "original_filename": "Wrecking Ball (Metal Purple).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Wrecking Ball (Metal Purple).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Earth",
+    "biography": "A mole who rolls into battle. Wrecking Ball uses his round body as a devastating weapon.",
+    "abilities": [
+      "Roll Attack",
+      "Earth Burrow",
+      "Ball Slam"
+    ],
+    "character_type": "Core"
   }
 }

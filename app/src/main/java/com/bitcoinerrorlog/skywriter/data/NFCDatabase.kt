@@ -103,11 +103,25 @@ class NFCDatabase(private val context: Context) {
             val json = JSONObject(jsonString)
             
             val metadataJson = json.getJSONObject("metadata")
+            
+            // Parse abilities array if present
+            val abilitiesList = mutableListOf<String>()
+            if (metadataJson.has("abilities")) {
+                val abilitiesArray = metadataJson.getJSONArray("abilities")
+                for (i in 0 until abilitiesArray.length()) {
+                    abilitiesList.add(abilitiesArray.getString(i))
+                }
+            }
+            
             val metadata = CharacterMetadata(
                 originalFilename = metadataJson.getString("original_filename"),
                 originalPath = metadataJson.getString("original_path"),
                 category = metadataJson.optString("category").takeIf { it.isNotEmpty() },
-                subcategory = metadataJson.optString("subcategory").takeIf { it.isNotEmpty() }
+                subcategory = metadataJson.optString("subcategory").takeIf { it.isNotEmpty() },
+                element = metadataJson.optString("element").takeIf { it.isNotEmpty() },
+                biography = metadataJson.optString("biography").takeIf { it.isNotEmpty() },
+                abilities = abilitiesList,
+                characterType = metadataJson.optString("character_type").takeIf { it.isNotEmpty() }
             )
             
             CharacterModel(

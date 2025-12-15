@@ -73,6 +73,14 @@
     "original_filename": "Ignitor.nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Ignitor.nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Fire",
+    "biography": "A fire knight who wields a flaming sword. Ignitor is a noble warrior who fights with honor and fire.",
+    "abilities": [
+      "Flaming Sword",
+      "Fire Charge",
+      "Knight's Valor"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Gill Grunt (Deep Dive).nfc",
     "original_path": "Skylanders 5 Superchargers/1) Figures/Gill Grunt (Deep Dive).nfc",
     "category": "Skylanders 5 Superchargers",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Water",
+    "biography": "A fish soldier who fights with water cannons and harpoons. Gill Grunt is a master of aquatic combat.",
+    "abilities": [
+      "Water Cannon",
+      "Harpoon Shot",
+      "Aqua Blast"
+    ],
+    "character_type": "Core"
   }
 }

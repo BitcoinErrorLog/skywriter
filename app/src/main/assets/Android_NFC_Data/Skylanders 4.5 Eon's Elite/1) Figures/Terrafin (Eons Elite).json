@@ -73,6 +73,14 @@
     "original_filename": "Terrafin (Eons Elite).nfc",
     "original_path": "Skylanders 4.5 Eon's Elite/1) Figures/Terrafin (Eons Elite).nfc",
     "category": "Skylanders 4.5 Eon's Elite",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Earth",
+    "biography": "A shark who burrows through earth. Terrafin combines aquatic power with earth manipulation.",
+    "abilities": [
+      "Earth Burrow",
+      "Shark Strike",
+      "Ground Slam"
+    ],
+    "character_type": "Core"
   }
 }

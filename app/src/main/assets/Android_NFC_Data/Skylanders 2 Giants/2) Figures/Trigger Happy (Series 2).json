@@ -73,6 +73,14 @@
     "original_filename": "Trigger Happy (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Trigger Happy (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Tech",
+    "biography": "A gun-slinging troll who never runs out of ammo. Trigger Happy is a master of rapid-fire combat.",
+    "abilities": [
+      "Rapid Fire",
+      "Gun Blast",
+      "Tech Precision"
+    ],
+    "character_type": "Core"
   }
 }

@@ -15,5 +15,17 @@
     <color name="teal_700">#001529</color>
     <color name="skywriter_blue">#001F3F</color>
     <color name="skywriter_dark_blue">#001529</color>
+    
+    <!-- Element Colors -->
+    <color name="fire_element">#FF6B35</color>
+    <color name="water_element">#4A90E2</color>
+    <color name="earth_element">#8B4513</color>
+    <color name="air_element">#87CEEB</color>
+    <color name="life_element">#90EE90</color>
+    <color name="undead_element">#9370DB</color>
+    <color name="tech_element">#C0C0C0</color>
+    <color name="magic_element">#FF69B4</color>
+    <color name="light_element">#FFD700</color>
+    <color name="dark_element">#2F2F2F</color>
 </resources>
 

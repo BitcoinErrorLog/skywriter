@@ -73,6 +73,14 @@
     "original_filename": "Weeruptor (Spring).nfc",
     "original_path": "Skylanders 4 Trap Team/3) Figures (Minis)/Weeruptor (Spring).nfc",
     "category": "Skylanders 4 Trap Team",
-    "subcategory": "3) Figures (Minis)"
+    "subcategory": "3) Figures (Minis)",
+    "element": "Fire",
+    "biography": "A living volcano who spews lava and fire. Eruptor's explosive temper matches his explosive power.",
+    "abilities": [
+      "Lava Blast",
+      "Fire Eruption",
+      "Magma Strike"
+    ],
+    "character_type": "Core"
   }
 }

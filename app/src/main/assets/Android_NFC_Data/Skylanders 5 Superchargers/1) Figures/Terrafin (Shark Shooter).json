@@ -73,6 +73,14 @@
     "original_filename": "Terrafin (Shark Shooter).nfc",
     "original_path": "Skylanders 5 Superchargers/1) Figures/Terrafin (Shark Shooter).nfc",
     "category": "Skylanders 5 Superchargers",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Earth",
+    "biography": "A shark who burrows through earth. Terrafin combines aquatic power with earth manipulation.",
+    "abilities": [
+      "Earth Burrow",
+      "Shark Strike",
+      "Ground Slam"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Hex (Series 2).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Hex (Series 2).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Undead",
+    "biography": "A skeletal sorceress who casts dark magic. Hex combines necromancy with powerful spellcasting.",
+    "abilities": [
+      "Dark Magic",
+      "Bone Shield",
+      "Necromancy"
+    ],
+    "character_type": "Core"
   }
 }

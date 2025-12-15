@@ -73,6 +73,14 @@
     "original_filename": "Whirlwind (Hornblast).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Whirlwind (Hornblast).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Air",
+    "biography": "A unicorn who controls wind and rainbows. Whirlwind combines air magic with healing powers.",
+    "abilities": [
+      "Rainbow Blast",
+      "Wind Strike",
+      "Healing Rain"
+    ],
+    "character_type": "Core"
   }
 }

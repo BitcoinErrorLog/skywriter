@@ -73,6 +73,14 @@
     "original_filename": "Bouncer.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Bouncer.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Tech",
+    "biography": "A giant robot who towers over enemies. Bouncer uses massive strength and technology to dominate the battlefield.",
+    "abilities": [
+      "Giant Slam",
+      "Tech Blast",
+      "Massive Strike"
+    ],
+    "character_type": "Giant"
   }
 }

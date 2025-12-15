@@ -73,6 +73,14 @@
     "original_filename": "Hot Head.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Hot Head.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Fire",
+    "biography": "A giant fire demon who burns everything. Hot Head's flames are as hot as his temper.",
+    "abilities": [
+      "Fire Blast",
+      "Giant Slam",
+      "Inferno"
+    ],
+    "character_type": "Giant"
   }
 }

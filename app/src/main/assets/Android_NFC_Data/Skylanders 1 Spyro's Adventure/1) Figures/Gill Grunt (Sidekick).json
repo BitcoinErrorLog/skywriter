@@ -73,6 +73,14 @@
     "original_filename": "Gill Grunt (Sidekick).nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Gill Grunt (Sidekick).nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Water",
+    "biography": "A fish soldier who fights with water cannons and harpoons. Gill Grunt is a master of aquatic combat.",
+    "abilities": [
+      "Water Cannon",
+      "Harpoon Shot",
+      "Aqua Blast"
+    ],
+    "character_type": "Core"
   }
 }

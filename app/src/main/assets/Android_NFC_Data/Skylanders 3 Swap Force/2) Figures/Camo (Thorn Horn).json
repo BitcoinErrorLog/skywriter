@@ -73,6 +73,14 @@
     "original_filename": "Camo (Thorn Horn).nfc",
     "original_path": "Skylanders 3 Swap Force/2) Figures/Camo (Thorn Horn).nfc",
     "category": "Skylanders 3 Swap Force",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Life",
+    "biography": "A plant-based creature who can blend into nature and attack from stealth. Camo uses nature's power to protect the Skylands.",
+    "abilities": [
+      "Stealth Attack",
+      "Vine Whip",
+      "Nature's Wrath"
+    ],
+    "character_type": "Core"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Ninjini (Scarlet).nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Ninjini (Scarlet).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Magic",
+    "biography": "A giant genie who grants wishes and fights with magic. Ninjini combines genie magic with ninja skills.",
+    "abilities": [
+      "Magic Blast",
+      "Genie Strike",
+      "Wish Power"
+    ],
+    "character_type": "Giant"
   }
 }

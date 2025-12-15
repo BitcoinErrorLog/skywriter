@@ -73,6 +73,14 @@
     "original_filename": "Double Trouble (Royal).nfc",
     "original_path": "Skylanders 2 Giants/2) Figures/Double Trouble (Royal).nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "2) Figures"
+    "subcategory": "2) Figures",
+    "element": "Magic",
+    "biography": "A two-headed wizard who casts powerful spells. Double Trouble's dual minds make them unpredictable in battle.",
+    "abilities": [
+      "Magic Blast",
+      "Dual Spell",
+      "Mystic Shield"
+    ],
+    "character_type": "Core"
   }
 }

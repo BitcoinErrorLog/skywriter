@@ -73,6 +73,14 @@
     "original_filename": "Drill Sergeant (Gold).nfc",
     "original_path": "Skylanders 1 Spyro's Adventure/1) Figures/Drill Sergeant (Gold).nfc",
     "category": "Skylanders 1 Spyro's Adventure",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Tech",
+    "biography": "A robotic drill sergeant who commands with authority and precision. Drill Sergeant uses military tactics and technology.",
+    "abilities": [
+      "Drill Attack",
+      "Command Strike",
+      "Tech Blast"
+    ],
+    "character_type": "Core"
   }
 }

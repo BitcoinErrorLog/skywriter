@@ -73,6 +73,14 @@
     "original_filename": "Swarm.nfc",
     "original_path": "Skylanders 2 Giants/1) Giants/Swarm.nfc",
     "category": "Skylanders 2 Giants",
-    "subcategory": "1) Giants"
+    "subcategory": "1) Giants",
+    "element": "Life",
+    "biography": "A giant bug who commands insects. Swarm uses nature's power and insect armies in battle.",
+    "abilities": [
+      "Swarm Attack",
+      "Insect Strike",
+      "Nature's Wrath"
+    ],
+    "character_type": "Giant"
   }
 }

@@ -73,6 +73,14 @@
     "original_filename": "Slam Bam (Eons Elite).nfc",
     "original_path": "Skylanders 4.5 Eon's Elite/1) Figures/Slam Bam (Eons Elite).nfc",
     "category": "Skylanders 4.5 Eon's Elite",
-    "subcategory": "1) Figures"
+    "subcategory": "1) Figures",
+    "element": "Water",
+    "biography": "A yeti who fights with ice and water. Slam Bam combines brute strength with elemental power.",
+    "abilities": [
+      "Ice Slam",
+      "Water Blast",
+      "Frost Strike"
+    ],
+    "character_type": "Core"
   }
 }

@@ -111,7 +111,7 @@ class CharacterDetailDialog : DialogFragment() {
                     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AbilityViewHolder {
                         val chip = Chip(parent.context)
                         chip.setChipBackgroundColorResource(R.color.navy_blue_light)
-                        chip.chipTextColor = parent.context.getColorStateList(R.color.white)
+                        chip.setTextColor(androidx.core.content.ContextCompat.getColor(parent.context, R.color.white))
                         chip.setPadding(
                             resources.getDimensionPixelSize(R.dimen.chip_padding),
                             resources.getDimensionPixelSize(R.dimen.chip_padding),

@@ -96,12 +96,11 @@ class WriteAmiiboFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     override fun onResume() {
         super.onResume()
-        nfcManager.enableForegroundDispatch()
+        // NFC ReaderMode is managed by MainActivity and dispatched to us
     }
     
     override fun onPause() {
         super.onPause()
-        nfcManager.disableForegroundDispatch()
         // Clear screen-on flag when leaving fragment
         if (isAdded) {
             requireActivity().window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

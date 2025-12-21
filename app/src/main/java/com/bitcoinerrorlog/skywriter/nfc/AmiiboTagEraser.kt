@@ -45,8 +45,8 @@ class AmiiboTagEraser {
             var pagesErased = 0
             var pagesVerified = 0
             
-            // Erase pages 3-134 (data pages, skip UID pages 0-2)
-            for (pageIndex in 3 until TOTAL_PAGES) {
+            // Erase pages 4-134 (data pages, skip UID pages 0-2 and CC page 3 for special handling)
+            for (pageIndex in 4 until TOTAL_PAGES) {
                 try {
                     val zeroPage = ByteArray(BYTES_PER_PAGE) { 0 }
                     writePage(nfcA, pageIndex, zeroPage)
@@ -73,14 +73,26 @@ class AmiiboTagEraser {
                 }
             }
             
-            // Try to reset page 3 (first data page) to default Amiibo header if possible
+            // Special handling for Page 3 (Capability Container)
+            // Reset to default NTAG215 CC: E1 10 3E 00
             try {
-                // Default Amiibo header (page 3): usually starts with specific pattern
-                // For a blank tag, we'll write zeros which is fine
-                val defaultPage3 = ByteArray(BYTES_PER_PAGE) { 0 }
-                writePage(nfcA, 3, defaultPage3)
+                val ntag215CC = byteArrayOf(0xE1.toByte(), 0x10.toByte(), 0x3E.toByte(), 0x00.toByte())
+                writePage(nfcA, 3, ntag215CC)
+                
+                // Verify CC page
+                val readCommand = byteArrayOf(0x30.toByte(), 0x03.toByte())
+                val readResponse = nfcA.transceive(readCommand)
+                if (readResponse != null && readResponse.size >= BYTES_PER_PAGE) {
+                    val verifiedData = readResponse.sliceArray(0 until BYTES_PER_PAGE)
+                    if (verifiedData.contentEquals(ntag215CC)) {
+                        pagesVerified++
+                        Log.d(TAG, "Reset and verified Page 3 (CC) to NTAG215 defaults")
+                    } else {
+                        Log.w(TAG, "Page 3 (CC) reset succeeded but data not verified")
+                    }
+                }
             } catch (e: Exception) {
-                Log.w(TAG, "Could not reset page 3: ${e.message}")
+                Log.w(TAG, "Could not reset Page 3 (CC): ${e.message}")
             }
             
             nfcA.close()

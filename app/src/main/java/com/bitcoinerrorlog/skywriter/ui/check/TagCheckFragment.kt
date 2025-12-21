@@ -126,12 +126,11 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
     
     override fun onResume() {
         super.onResume()
-        nfcManager.enableForegroundDispatch()
+        // NFC ReaderMode is managed by MainActivity and dispatched to us
     }
     
     override fun onPause() {
         super.onPause()
-        nfcManager.disableForegroundDispatch()
         // Clear screen-on flag when leaving fragment
         if (isAdded) {
             requireActivity().window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -466,6 +465,9 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             binding.tagContentsText.text = summary
             binding.tagContentsText.visibility = View.VISIBLE
             binding.tagContentsTitle.visibility = View.VISIBLE
+            
+            // Populate Hex Viewer for Amiibo
+            displayHexData(amiiboReadResult.pages, 4) // NTAG215: 4 bytes per page
         } else if (!isAmiiboMode && readResult is TagReadResult.Success) {
             val char = readResult.identifiedCharacter
             val summary = buildString {
@@ -492,10 +494,42 @@ class TagCheckFragment : Fragment(), MainActivity.OnNfcTagDetectedListener {
             binding.tagContentsText.text = summary
             binding.tagContentsText.visibility = View.VISIBLE
             binding.tagContentsTitle.visibility = View.VISIBLE
+            
+            // Populate Hex Viewer for Skylanders
+            displayHexData(readResult.blocks, 16) // Mifare Classic: 16 bytes per block
         } else {
             binding.tagContentsText.visibility = View.GONE
             binding.tagContentsTitle.visibility = View.GONE
+            binding.hexViewerTitle.visibility = View.GONE
+            binding.hexViewerCard.visibility = View.GONE
         }
+    }
+    
+    private fun displayHexData(data: List<String>, bytesPerRow: Int) {
+        if (data.isEmpty()) {
+            binding.hexViewerTitle.visibility = View.GONE
+            binding.hexViewerCard.visibility = View.GONE
+            return
+        }
+        
+        val hexString = buildString {
+            for ((index, rowData) in data.withIndex()) {
+                val prefix = if (bytesPerRow == 4) "Page %03d: ".format(index) else "Block %02d: ".format(index)
+                append(prefix)
+                
+                // Group hex string into bytes (2 chars each)
+                val formattedRow = rowData.chunked(2).joinToString(" ")
+                append(formattedRow)
+                
+                if (index < data.size - 1) {
+                    append("\n")
+                }
+            }
+        }
+        
+        binding.hexViewerText.text = hexString
+        binding.hexViewerTitle.visibility = View.VISIBLE
+        binding.hexViewerCard.visibility = View.VISIBLE
     }
     
     private fun eraseTag(tag: android.nfc.Tag) {

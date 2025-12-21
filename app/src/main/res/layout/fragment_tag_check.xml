@@ -178,6 +178,47 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recommendations_title" />
 
+        <TextView
+            android:id="@+id/hex_viewer_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Raw Tag Data (Hex)"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recommendations_text" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/hex_viewer_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="2dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/hex_viewer_title">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/hex_viewer_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:fontFamily="monospace"
+                    android:textIsSelectable="true"
+                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                    android:text="00: 00 00 00 00 00 00 00 00\n01: 00 00 00 00 00 00 00 00" />
+            </HorizontalScrollView>
+        </com.google.android.material.card.MaterialCardView>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/check_button"
             android:layout_width="0dp"
@@ -198,7 +239,7 @@
             app:backgroundTint="@color/fire_element"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recommendations_text" />
+            app:layout_constraintTop_toBottomOf="@id/hex_viewer_card" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/check_again_button"

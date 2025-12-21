@@ -239,36 +239,49 @@ class MainActivity : AppCompatActivity() {
         return navController?.navigateUp() ?: super.onSupportNavigateUp()
     }
     
-    private fun handleIntent(intent: Intent?) {
-        if (intent != null && (intent.action == android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED || 
-            intent.action == android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED)) {
-            forwardNfcIntent(intent)
-        }
-    }
-    
     override fun onResume() {
         super.onResume()
-        nfcManager.enableForegroundDispatch()
+        nfcManager.enableReaderMode { tag ->
+            handleTagDetected(tag)
+        }
     }
-    
+
     override fun onPause() {
         super.onPause()
-        nfcManager.disableForegroundDispatch()
+        nfcManager.disableReaderMode()
     }
-    
+
+    private fun handleTagDetected(tag: android.nfc.Tag) {
+        // Forward to the current fragment if it implements the listener
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
+        val currentFragment = navHostFragment?.childFragmentManager?.fragments?.get(0)
+        
+        if (currentFragment is OnNfcTagDetectedListener) {
+            // Create a fake intent because existing fragments expect it, 
+            // but we'll eventually refactor them to take Tag directly
+            val intent = Intent().apply {
+                putExtra(android.nfc.NfcAdapter.EXTRA_TAG, tag)
+            }
+            runOnUiThread {
+                currentFragment.onNfcTagDetected(intent)
+            }
+        }
+    }
+
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        // With ReaderMode, onNewIntent is mostly bypassed for NFC, 
+        // but we keep it for backward compatibility
         handleIntent(intent)
     }
-    
-    private fun forwardNfcIntent(intent: Intent) {
-        // Forward NFC intent to current fragment
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as? NavHostFragment
-        navHostFragment?.childFragmentManager?.fragments?.firstOrNull()?.let { fragment ->
-            if (fragment is OnNfcTagDetectedListener) {
-                fragment.onNfcTagDetected(intent)
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent != null && (intent.action == android.nfc.NfcAdapter.ACTION_TECH_DISCOVERED || 
+            intent.action == android.nfc.NfcAdapter.ACTION_TAG_DISCOVERED)) {
+            val tag = nfcManager.getTagFromIntent(intent)
+            if (tag != null) {
+                handleTagDetected(tag)
             }
         }
     }

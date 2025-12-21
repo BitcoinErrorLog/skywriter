@@ -1,54 +1,61 @@
 package com.bitcoinerrorlog.skywriter.nfc
 
 import android.app.Activity
-import android.app.PendingIntent
-import android.content.Intent
-import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import android.nfc.tech.MifareClassic
+import android.os.Bundle
+import android.util.Log
 
+/**
+ * Manages NFC adapter and reader mode for stable tag detection.
+ */
 class NFCManager(private val activity: Activity) {
-    
+
     private val nfcAdapter: NfcAdapter? = NfcAdapter.getDefaultAdapter(activity)
-    private val pendingIntent: PendingIntent = PendingIntent.getActivity(
-        activity,
-        0,
-        Intent(activity, activity.javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-        PendingIntent.FLAG_MUTABLE
-    )
-    
+    private var tagListener: ((Tag) -> Unit)? = null
+
     val isNFCAvailable: Boolean
         get() = nfcAdapter != null && nfcAdapter.isEnabled
-    
-    fun enableForegroundDispatch() {
-        // Listen for all NFC tag types, not just Mifare Classic
-        val intentFilters = arrayOf(
-            IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED),
-            IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED)
-        )
-        // Tech lists: null means we accept all technologies
-        nfcAdapter?.enableForegroundDispatch(
+
+    /**
+     * Enables reader mode for stable, exclusive access to NFC tags.
+     * This is more robust than foreground dispatch and avoids "tag out of date" errors.
+     */
+    fun enableReaderMode(callback: (Tag) -> Unit) {
+        if (nfcAdapter == null || !nfcAdapter.isEnabled) return
+        
+        tagListener = callback
+        
+        val options = Bundle()
+        // Reduce presence check delay to detect removal faster
+        options.putInt(NfcAdapter.EXTRA_READER_PRESENCE_CHECK_DELAY, 250)
+
+        nfcAdapter.enableReaderMode(
             activity,
-            pendingIntent,
-            intentFilters,
-            null // No tech lists - we want all tags
+            { tag ->
+                Log.d("NFCManager", "Tag detected via ReaderMode: ${tag.id.joinToString("") { "%02X".format(it) }}")
+                activity.runOnUiThread {
+                    tagListener?.invoke(tag)
+                }
+            },
+            NfcAdapter.FLAG_READER_NFC_A or 
+            NfcAdapter.FLAG_READER_NFC_B or 
+            NfcAdapter.FLAG_READER_NFC_F or 
+            NfcAdapter.FLAG_READER_NFC_V or 
+            NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK,
+            options
         )
     }
-    
-    fun disableForegroundDispatch() {
-        nfcAdapter?.disableForegroundDispatch(activity)
+
+    /**
+     * Disables reader mode.
+     */
+    fun disableReaderMode() {
+        nfcAdapter?.disableReaderMode(activity)
+        tagListener = null
     }
-    
-    fun getTagFromIntent(intent: Intent): Tag? {
+
+    fun getTagFromIntent(intent: android.content.Intent): Tag? {
         return intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
     }
-    
-    fun isMifareClassicTag(tag: Tag?): Boolean {
-        return tag?.let {
-            val techList = it.techList
-            techList.any { tech -> tech.contains("MifareClassic") }
-        } ?: false
-    }
 }
-

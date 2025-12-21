@@ -129,26 +129,24 @@ class NTAG215Writer {
                         writePage(nfcA, pageIndex, pageData)
                         pagesWritten++
                         
-                        // Verify critical pages (3-10 contain Amiibo header and important data)
-                        if (pageIndex <= 10) {
-                            try {
-                                val readCommand = byteArrayOf(0x30.toByte(), pageIndex.toByte())
-                                val readResponse = nfcA.transceive(readCommand)
-                                if (readResponse != null && readResponse.size >= BYTES_PER_PAGE) {
-                                    val writtenData = readResponse.sliceArray(0 until BYTES_PER_PAGE)
-                                    if (writtenData.contentEquals(pageData)) {
-                                        pagesVerified++
-                                        Log.d(TAG, "Successfully wrote and verified page $pageIndex")
-                                    } else {
-                                        Log.e(TAG, "Page $pageIndex write command succeeded but data not written (write-protected?)")
+                        // Verify EVERY page written (Industrial-grade integrity)
+                        try {
+                            val readCommand = byteArrayOf(0x30.toByte(), pageIndex.toByte())
+                            val readResponse = nfcA.transceive(readCommand)
+                            if (readResponse != null && readResponse.size >= BYTES_PER_PAGE) {
+                                val writtenData = readResponse.sliceArray(0 until BYTES_PER_PAGE)
+                                if (writtenData.contentEquals(pageData)) {
+                                    pagesVerified++
+                                    Log.d(TAG, "Successfully wrote and verified page $pageIndex")
+                                } else {
+                                    Log.e(TAG, "Page $pageIndex write command succeeded but data not written (write-protected?)")
+                                    if (pageIndex <= 10) { // Pages 3-10 are critical for identification
                                         criticalPagesFailed.add(pageIndex)
                                     }
                                 }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Could not verify page $pageIndex: ${e.message}")
                             }
-                        } else {
-                            Log.d(TAG, "Successfully wrote page $pageIndex")
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not verify page $pageIndex: ${e.message}")
                         }
                     } catch (e: java.io.IOException) {
                         Log.e(TAG, "IO error writing page $pageIndex: ${e.message}")

@@ -100,8 +100,20 @@ class TagEraser {
                         // Write zeros to data block
                         val zeroBlock = ByteArray(16) { 0 }
                         mifare.writeBlock(blockIndex, zeroBlock)
-                        blocksErased++
-                        Log.d(TAG, "Erased block $blockIndex")
+                        
+                        // Verify (Industrial-grade integrity)
+                        try {
+                            val verifiedData = mifare.readBlock(blockIndex)
+                            if (verifiedData != null && verifiedData.all { it == 0.toByte() }) {
+                                blocksErased++
+                                Log.d(TAG, "Erased and verified block $blockIndex")
+                            } else {
+                                Log.w(TAG, "Block $blockIndex write succeeded but verification failed (write-protected?)")
+                            }
+                        } catch (e: Exception) {
+                            Log.w(TAG, "Could not verify block $blockIndex: ${e.message}")
+                            blocksErased++ // Still count as erased if write didn't throw
+                        }
                     } catch (e: Exception) {
                         Log.w(TAG, "Failed to erase block $blockIndex: ${e.message}")
                         // Continue with other blocks

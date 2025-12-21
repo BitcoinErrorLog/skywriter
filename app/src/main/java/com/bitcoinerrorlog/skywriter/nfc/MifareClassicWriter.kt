@@ -161,6 +161,21 @@ class MifareClassicWriter {
                 try {
                     mifare.writeBlock(index, blockData)
                     Log.d(TAG, "Successfully wrote block $index")
+                    
+                    // Verify the write (Industrial-grade integrity)
+                    try {
+                        val verifiedData = mifare.readBlock(index)
+                        if (verifiedData != null && verifiedData.contentEquals(blockData)) {
+                            Log.d(TAG, "Verified block $index")
+                        } else {
+                            Log.e(TAG, "Block $index write succeeded but verification failed (write-protected?)")
+                            if (!isSectorTrailer(index)) {
+                                return@withContext WriteResult.Error("Verification failed for block $index. Tag may be write-protected.")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Could not verify block $index: ${e.message}")
+                    }
                 } catch (e: java.io.IOException) {
                     // Connection error - try to reconnect once
                     Log.w(TAG, "IO error writing block $index, attempting reconnect: ${e.message}")
